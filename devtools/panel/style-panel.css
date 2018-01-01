@@ -1,0 +1,216 @@
+/* body {
+    display: inline-block;
+}*/
+
+
+/*
+#urls_tbl table {
+  border-collapse: collapse;
+  border-spacing: 0px;
+} */
+
+#urls_tbl td {
+    border: 2px solid white;
+    padding: 0;
+    margin: 0px;
+    overflow: auto;
+}
+
+
+/* border-top: 10px solid red; */
+
+
+/*
+#urls_tbl div {
+  resize: both;
+  overflow: auto;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  border: 1px solid transparent;
+  display: inline;
+} */
+
+
+/*
+#urls_tbl th td div {
+  border: 0;
+  width: auto;
+  height: auto;
+  min-height: 20px;
+  min-width: 20px;
+} */
+
+#urls_tbl {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    /* width: 50%; */
+    padding-top: 10px;
+    /* border-spacing: 10px; */
+}
+
+#urls_tbl td,
+#urls_tbl th {
+    border: 1px solid #ddd;
+    padding: 4px;
+}
+
+#urls_tbl tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#urls_tbl tr:hover {
+    background-color: #ddd;
+}
+
+#urls_tbl th {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: left;
+    background: rgba(242, 242, 242, 0.26);
+    color: black;
+    width: fix;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table,
+table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    width: 100%;
+    display: table;
+    box-sizing: border-box;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+
+/* .table-cell, table td { display:table-cell; border:3px solid #ddd; padding:5px 10px; background:#f9f9f9; } */
+
+.dotcellURL {
+    margin-right: 30px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-height: 1.2em;
+    /* fallback, X */
+    max-height: 6.6em;
+    /* fallback, X*N+some overflow, dont forgot change js-panel onClick  too  */
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.dotcellPOST_UA {
+    vertical-align: top;
+    overflow: hidden;
+    white-space: pre-line;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-height: 1.2em;
+    /* fallback, X */
+    max-height: 6.6em;
+    /* fallback, X*N+some overflow */
+}
+
+.dotcellNormal {
+    overflow: hidden;
+    white-space: pre-line;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-height: 1.2em;
+    /* fallback, X */
+    max-height: 6.6em;
+    /* fallback, X*N+some overflow */
+}
+
+.dotcellNormalParent {
+    width: 4%;
+}
+
+.dotcellUAParent {
+    width: 11%;
+}
+
+.dotcellURLParent {
+    width: 70%;
+}
+
+div.button_container {
+    display: inline-block;
+    padding: 1px;
+}
+
+div.button_clear input {
+    cursor: pointer;
+    height: 20px;
+    vertical-align: middle;
+}
+
+input[type="submit"] {
+    border: none;
+    width: 24px;
+    background: url(trash_314282_20.png) no-repeat;
+    background-size: 20px;
+}
+
+input[type="image"]:focus {
+    width: 24px;
+    border: none;
+    outline: none;
+}
+
+input[type="text"] {
+    border-style: outset;
+    border-color: gray;
+    width: 100px;
+    padding: 0px 0px;
+    line-height: 14px;
+    text-align: center;
+}
+
+
+/* START checkbox */
+
+input[type="checkbox"] {
+    width: 24px;
+    border: none;
+    width: 5px;
+    height: 5px;
+    margin: 0px;
+    vertical-align: bottom;
+}
+
+div.button_clear label {
+    display: block;
+    float: left;
+    padding-right: 10px;
+    white-space: nowrap;
+}
+
+
+/*
+.checkboxes input {
+  vertical-align: middle;
+}
+*/
+
+div.button_clear label span {
+    vertical-align: middle;
+}
+
+div {
+    font-size: 0.9em;
+}
+
+div font {
+    font-size: inherit;
+}
+
+
+/* END checkbox */
