@@ -20,15 +20,18 @@ The url https://mozilla.org/video/foo/hi?q=1 will NOT compare with https://mozil
 
 The url https://mozilla.org/video/foo/hi?q=1 will NOT compare with https://mozilla.com/video/foo/hello?q=1 since both hosts are different, i.e. https://mozilla.org not equal to https://mozilla.com.
 
-The reasons how this rules has been choosen is because of the connections of query string/headers between 2 URLs is most likely depends on filename/last path, instead of the host and middle path. You can imaging that youtube.com/video shouldn't diff with youtube.com/audio, instead youtube.com/video should diff with youtube.com/video if possible. And if compare google.com with facebook.com, it doesn't make mush sense.
+The reasons how this rules has been choosen is because of the connections of query string/headers between 2 URLs is most likely depends on filename/last path, instead of the host and middle path. You can imaging that youtube.com/video shouldn't diff with youtube.com/audio, instead youtube.com/video should diff with youtube.com/video if possible. And if compare google.com with facebook.com, it doesn't make mush sense. But I create a button called 'Diff if full path changed' to allow you to tick for youtube.com/AAA/BBB/CCC and youtube.com/DDD/EEE/FFF to diff.
 
 ## Some Features ##
 
 1. Click the [Diff] URL entry to reveals the current and previous entry URL.
 2. Click the [Diff/Same/New/] URL entries to expands if not enough space of height.
 3. Click the Post data and headers entries to open new window to show the [prev][diff][current] side by side comparision.
-4. Hover the top bar buttons to know their functionality.
+4. Hover the top bar buttons to popup functionality tooltip.
 
+## Demonstration video (Click image to play at YouTube): ##
+
+[![watch in youtube](https://i.ytimg.com/vi/ZIeJ4uRhD5w/hqdefault.jpg)](https://www.youtube.com/watch?v=ZIeJ4uRhD5w "Diff HTTP")
 
 
 
