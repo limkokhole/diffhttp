@@ -1,8 +1,5 @@
 /* jshint esversion: 6 */
-/**
-This script is run whenever the devtools are open.
-In here, we can create our panel.
-*/
+//This script is run whenever the devtools are open.
 
 /* function handleShown() {
   console.log("panel is being shown");
@@ -10,9 +7,9 @@ In here, we can create our panel.
 
 //bug: not called if close inspector window instead of change panel, so you can't rely one this to do cleanup process (e.g. disconnect port)
 //OR you can consider it's not the bug, the bug is no new function to detect inspector is close to clean up this script.
-function handleHidden() {
+/* function handleHidden() {
 	//console.log("panel is being hidden");
-}
+} */
 
 /**
 Create a panel, and add listeners for panel show/hide events.
@@ -82,36 +79,29 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
 
 	let checkPause;
 	let checkedAllWeb;
-	let checkExcludeDataImg;
+	let checkIncludeDataURI;
 	let checkDiffFullPath;
-	//let special_param_groupVar;
 
-	//    var port = browser.runtime.connect({name: 'diffHTTPUpdateURL'});
+	//var port = browser.runtime.connect({name: 'diffHTTPUpdateURL'});
 
 	//if inspector window is close, the portMessage still send but failed, only disconnect if webpage tab close (or disconnect old port and connect to new port if reopen inspector in same tab)
 	port.onMessage.addListener((msg) => {
-		// Write information to the panel, if exists.
-		// If we don't have a panel reference (yet), queue the data.
 		//console.log("tabId: " + msg.tabId + " #this.tabId: " + tabId);
 		if (_window) {
 			let items = msg.items;
 
 			if (checkPause.checked) {
-				return; //should include pause 
+				return;
 				//if (msg.tag === "add") return;
 			}
 
-			if (checkExcludeDataImg && !checkExcludeDataImg.checked) {
-				//console.log("exclude dataImg checking " + items.url);
-				if (items.url.startsWith("data:image")) {
-					//console.log("return now ");
+			if (checkIncludeDataURI && !checkIncludeDataURI.checked) {
+				//rf: https://en.wikipedia.org/wiki/Media_type
+				if (items.url.startsWith("data:")) {
 					return;
 				}
-				//else console.log("not data:image, cont.");
 			}
 
-			//let special = "mime="; //no nid match if only mime, overkill
-			//let special = special_param_groupVar; //no nid match if only mime, overkill
 			if ((checkedAllWeb && checkedAllWeb.checked) || (tabId === msg.tabId)) {
 				//let items = msg["items"];
 				//console.log("received log 1: " + items.requestId + "url: " + items.url + " #tag: " + msg.tag);
@@ -130,49 +120,6 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
 						if (qParams) qArr = qParams.split("&");
 						//prefixURL = items.url.substring(0, qi + 1); //prefixURL will keep '?'
 					} //else prefixURL = items.url;
-
-					/* 					let qvCurr = null;
-										if (special) {
-											qArr.every((q) => {
-												if (q.startsWith(special)) {
-													qvCurr = q.replace(/^(special)/, "");
-													return false;
-												}
-												return true;
-											});
-										} */
-					//	if (special && qvCurr) {
-					/* 						let rec_len = itemRequestRecordURLs.length;
-											insertIndex = binarySearch(itemRequestRecordURLs, 0, rec_len, items.url);
-											if (rec_len > 0) {
-												let compareIndex = insertIndex-1;
-												if (compareIndex >= 0) {
-													let compareIt = itemRequestRecordURLs[compareIndex];
-
-													let pMatch = false;
-													compareIt[1].every((q) => {
-														if (q.startsWith(special)) {
-															//console.log("startWith mime=");
-															if (q.replace(/^(special)/, "") === qvCurr) {
-																console.log("yes, is mime=" + qvCurr);
-																pMatch = true;
-																return false; //break
-															}
-														}
-														return true;
-													});
-													if (pMatch) {
-														console.log("!match:" + compareIt[0]);
-														prevURL = compareIt[0];
-														prevPostData = compareIt[2];
-														return false;
-													}
-
-												}
-											} */
-
-					//	} else {
-					//console.log("test url only 0");
 
 					let compareIt;
 					let rec_len = itemRequestRecordURLs.length;
@@ -374,8 +321,8 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
 
 		checkPause = _window.document.getElementById("checkbox_pause");
 		checkedAllWeb = _window.document.getElementById("checkbox_accept_all_web");
-		checkExcludeDataImg = _window.document.getElementById("checkbox_exclude_data_img");
-		checkDiffFullPath = _window.document.getElementById("checkbox_diff_if_full_path_changed");
+		checkIncludeDataURI = _window.document.getElementById("checkbox_include_data_uri");
+		checkDiffFullPath = _window.document.getElementById("checkbox_diff_if_host_same");
 		/* 		let special_param_group = _window.document.getElementById("special_param_group");
 				special_param_group.addEventListener("input", function (evt) {
 					special_param_groupVar = this.value + "=";
@@ -405,7 +352,7 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
 	});
 
 
-	extensionPanel.onHidden.addListener(handleHidden);
+	//extensionPanel.onHidden.addListener(handleHidden);
 	/*
 	extensionPanel.onHidden.addListener(function() {
 	    console.log("hole panel hidden 0");

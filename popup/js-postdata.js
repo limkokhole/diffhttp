@@ -1,24 +1,15 @@
 /* jshint esversion: 6 */
-/*
-Just draw a border round the document.body.
-*/
 //console.log("running popup script 0");
 let tabUrl = null;
-//document.body.style.border = "5px solid green";
 
-browser.runtime.onMessage.addListener(async (msg, sender) => {
-/*     console.log(msg);
-    console.log(sender); */
+browser.runtime.onMessage.addListener(async(msg, sender) => {
+    /*     console.log(msg);
+        console.log(sender); */
     if (sender.id === browser.runtime.id) {
-/*         console.log(msg);
-        console.log("inject_pop_up tag: " + msg.tag);
-        console.log("inject_pop_up postdata: " + msg.msg.postdata); */
+        /*         console.log(msg);
+                console.log("inject_pop_up tag: " + msg.tag);
+                console.log("inject_pop_up postdata: " + msg.msg.postdata); */
         if (msg.tag === "inject_pop_up") {
-/*             document.body.textContent = "";
-            var header = document.createElement('h1');
-            header.textContent = msg.replacement;
-            document.body.appendChild(header); */
-            //document.body.innerHTML = msg.msg.postdata;
 
             let prevPostData_row = document.getElementById("prevPostData");
             let diffString_row = document.getElementById("diffString");
@@ -29,7 +20,7 @@ browser.runtime.onMessage.addListener(async (msg, sender) => {
             diffString_row.innerHTML = "<pre style=\"overflow-x:scroll\">" + msg.msg.postdata.diffString + "</pre>";
             postedString_row.innerHTML = "<pre style=\"overflow-x:scroll\">" + msg.msg.postdata.postedString + "</pre>";
             //postedString_row.click();
-            
+
         }
     }
     //console.log("popup html received msg");
@@ -38,45 +29,47 @@ browser.runtime.onMessage.addListener(async (msg, sender) => {
 
 function onGot(tabInfo) {
     tabUrl = tabInfo.url;
-/*     console.log("curr tab is:");
-    console.log(tabUrl);
-    console.log(tabInfo); */
-  
+    /*     console.log("curr tab is:");
+        console.log(tabUrl);
+        console.log(tabInfo); */
+
     //test https://bugzilla.mozilla.org/show_bug.cgi?id=1426434 scenario, proved that it's possible 
     //... window B shows item A first without wait for window A done
-/*     let myArray = [10000, 1000, 10000, 30000]
-    let c = myArray[Math.floor(Math.random() * myArray.length)];
-    setTimeout(() => {
-        console.log("THIS IS: " + c);
-        browser.runtime.sendMessage({
-          tag: "popup_postdata",
-          title: "done load popup post data window script"
-      });
-    }, c); */
+    /*     let myArray = [10000, 1000, 10000, 30000]
+        let c = myArray[Math.floor(Math.random() * myArray.length)];
+        setTimeout(() => {
+            console.log("THIS IS: " + c);
+            browser.runtime.sendMessage({
+              tag: "popup_postdata",
+              title: "done load popup post data window script"
+          });
+        }, c); */
 
     browser.runtime.sendMessage({
         tag: "popup_postdata",
         title: "done load popup post data window script"
     });
-  }
-  
-  function onError(error) {
+}
+
+function onError(error) {
     console.log(`diffhttp onError: ${error}`);
-  }
-  
-  function getInfoForTab(tabs) {
+}
+
+function getInfoForTab(tabs) {
     if (tabs.length > 0) {
-      var gettingInfo = browser.tabs.get(tabs[0].id);
-      gettingInfo.then(onGot, onError);
+        var gettingInfo = browser.tabs.get(tabs[0].id);
+        gettingInfo.then(onGot, onError);
     }
-  }
-  
-  var querying = browser.tabs.query({currentWindow: true, active: true});
-  querying.then(getInfoForTab, onError);
+}
 
-  //console.log("running popup script done");
+var querying = browser.tabs.query({
+    currentWindow: true,
+    active: true
+});
+querying.then(getInfoForTab, onError);
 
-  
+//console.log("running popup script done");
+
 /* function eatPageReceiver(request, sender, sendResponse) {
   console.log("come here 2");
   document.body.textContent = "";
@@ -86,9 +79,3 @@ function onGot(tabInfo) {
   console.log("come here 3");
 }
 browser.runtime.onMessage.addListener(eatPageReceiver); */
-
-/* document.body.textContent = "";
-var header = document.createElement('h1');
-header.textContent = "request.replacement";
-document.body.appendChild(header);
-console.log("come here 3"); */

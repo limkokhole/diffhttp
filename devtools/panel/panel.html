@@ -7,7 +7,6 @@
 </head>
 
 <body>
-
     <div class="button_container">
         <div class="button_clear">
             <label for="button_clear">
@@ -15,52 +14,39 @@
                 <span></span>
             </label>
 
-            <!-- div class="checkboxes" -->
             <!-- Note: title tooltip should put in label parent, otherwise will only shows in child checkbox but not label -->
             <label for="checkbox_pause" title="tick to pause log add to the table">
                 <input type="checkbox" id="checkbox_pause" />
                 <span>Pause</span>
             </label>
-            <!-- label for="checkbox_expand_url"><input type="checkbox" id="checkbox_expand_url" /> <span>Expand URL</span></label -->
             <label for="checkbox_accept_all_web" title="tick to include all windows tabs log">
                 <input type="checkbox" id="checkbox_accept_all_web" />
                 <span>All Tabs</span>
             </label>
-            <label for="checkbox_diff_if_full_path_changed" title="E.g. 'https://mozilla.org/AAA/BBB/xxx.jpg?__a=1' 
+            <label for="checkbox_diff_if_host_same" title="E.g. 'https://mozilla.org/AAA/BBB/xxx.jpg?__a=1' 
 and 'https://mozilla.org/AAA/BBB/yyy.jpg?__a=1',
-The default, this two URLs will be diff since both protocol://hosts+full_paths(exclude last_path) are different, so xxx will diff with yyy,
+The default, this two URLs will be diff since both protocol://hosts+middle_paths(exclude last_path) are same, so xxx will diff with yyy,
 , or else 'https://mozilla.org/CCC/DDD/xxx.jpg?__a=1' will marked as [New] tag.
-But if you insist to diff if only both hosts(exclude full path) is different, then just tick it.
-In other words, urls will be diff as long as full paths are different, once you ticked.
+But if you insist to diff if only both hosts(exclude middle and last path) are same, then just tick it.
 , and so /CCC/DDD above will able to diff with /AAA/BBB since protocol://hosts are same (i.e. All of them are https://mozilla.org).
 
 Currently no support for diff if hosts are different, since no point you diff google.com with youtube.com, and even diff between video.google.com and audio.google.com is not really useful IMHO.
 
-[Same] tag are the result of diff, happen if got duplicated protocol://host/<path depends above>
+[Same] tag are the result of diff, happen if protocol://host/<path> duplicated.
 
 Since the list of network captured will sort per url coming and try to compare the 2 siblings behind
 , hence the more urls has been collected, the closer result when diff.
 
 The Post data and Headers to be chosen are depends on its URL.
 ">
-                <input type="checkbox" id="checkbox_diff_if_full_path_changed" />
-                <span>Diff if full path changed</span>
+                <input type="checkbox" id="checkbox_diff_if_host_same" />
+                <span>Diff only if host same</span>
             </label>
-            <label for="checkbox_exclude_data_img" title="tick to include data:image url log">
-                <input type="checkbox" id="checkbox_exclude_data_img" />
-                <span>data:image</span>
+            <label for="checkbox_include_data_uri" title="tick to include Data URI log">
+                <input type="checkbox" id="checkbox_include_data_uri" />
+                <span>data:*</span>
             </label>
-            <!--             <label for="special_param_group" title="e.g. youtube site, if you insert 'mime'(without quotes)
-, then mime=video%2Fwebm and mime=audio%2Fwebm will diff in different group
-, i.e. don't diff each other even though url path is same.
-Currently only support single param.">
-                <input type="text" id="special_param_group" placeholder="param group" />
-            </label> -->
-
-            <!-- /div -->
-
         </div>
-
     </div>
 
     <table id="urls_tbl">
@@ -90,18 +76,6 @@ Currently only support single param.">
         </tbody>
     </table>
 </body>
-
-<script>
-    //function eatPageReceiver(request, sender, sendResponse) {
-    //   console.log("receive 0");
-    //    console.log("receive 1" + request.replacement)
-    //  document.body.textContent = "";
-    //  var header = document.createElement('h1');
-    //  header.textContent = request.replacement;
-    //  document.body.appendChild(header);
-    //}
-    //browser.runtime.onMessage.addListener(eatPageReceiver);
-</script>
 
 <script src="diff_match_patch.js"></script>
 <script src="js-panel.js"></script>

@@ -1,47 +1,57 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <style>
-            #postdata {
-                font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-                border-collapse: collapse;
-                table-layout: fixed;
-                width: 100%;
-            }
-            
-            #postdata td, #postdata th {
-                border: 1px solid #ddd;
-                padding: 8px;
-            }
-            
-            #postdata tr:nth-child(even){background-color: #fffff;}
-        
-            #postdata th {
-                padding-top: 12px;
-                padding-bottom: 12px;
-                text-align: left;
-                background-color: #fffff;
-                color: black;
-            }
+        #postdata {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        #postdata td,
+        #postdata th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #postdata tr:nth-child(even) {
+            background-color: #fffff;
+        }
+
+        #postdata th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #fffff;
+            color: black;
+        }
     </style>
 </head>
+
 <body>
     <table id="postdata">
-            <tr>
-                <th><b style="background-color:#ff0004;">[Prev]</b></th>
-                <th>Diff</th>
-                <th><b style="background-color:#0cff00;">[Curr]</b></th>
-            </tr>
-            <tr>
-                <td id="prevPostData"></td>
-                <td id="diffString"></td>
-                <td id="postedString"></td>
-            </tr>
+        <tr>
+            <th>
+                <b style="background-color:#ff0004;">[Prev]</b>
+            </th>
+            <th>Diff</th>
+            <th>
+                <b style="background-color:#0cff00;">[Curr]</b>
+            </th>
+        </tr>
+        <tr>
+            <td id="prevPostData"></td>
+            <td id="diffString"></td>
+            <td id="postedString"></td>
+        </tr>
     </table>
 </body>
 <!-- https://bugzilla.mozilla.org/show_bug.cgi?id=1267027 -->
 <!-- MUST include js to run, can't direct code js here -->
 <script src="js-postdata.js">
 </script>
+
 </html>

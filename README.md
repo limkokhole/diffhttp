@@ -4,9 +4,17 @@
 
 ## Brief ##
 
-This extension capture network traffic in developer tools Diff HTTP tab, and then diff the current entry (URL/Post data/Sent Headers/Received Headers) with the previous CLOSEST MATCH entries if meet "The Rules". The first entry will alwasy marked as [New] since no previous entry. The second entry and the following may mark as any of [New]/[Diff]/[Same] after it meets the rule and diff.
+This extension capture network traffic in developer tools Diff HTTP tab, and then diff the current entry (URL/Post data/Sent Headers/Received Headers) with the previous CLOSEST MATCH entries if meet "The Rules". The first entry will always marked as [New] since no previous entry. The second entry and the following may mark as any of [New]/[Diff]/[Same] after it meets the rule and diff.
 
 Note that the Post data and headers are choosen depends on it's URL.
+
+Currently no support on Private Window.
+
+You can load the extension from about:debugging, by click "Load temporary Add-on", then navigate to the downloaded folder, click first depth files(not directory) like manifest.json to load.
+
+The panel will shows blank if you click the "Diff HTTP" tab before "Inspector" tab loading done, see https://bugzilla.mozilla.org/show_bug.cgi?id=1424515
+
+You may need to upgrade your firefox to lastest version (v58 or v59) if panel doesn't capture anything.
 
 ## Logic behind the scene ##
 
@@ -20,7 +28,7 @@ The url https://mozilla.org/video/foo/hi?q=1 will NOT compare with https://mozil
 
 The url https://mozilla.org/video/foo/hi?q=1 will NOT compare with https://mozilla.com/video/foo/hello?q=1 since both hosts are different, i.e. https://mozilla.org not equal to https://mozilla.com.
 
-The reasons how this rules has been choosen is because of the connections of query string/headers between 2 URLs is most likely depends on filename/last path, instead of the host and middle path. You can imaging that youtube.com/video shouldn't diff with youtube.com/audio, instead youtube.com/video should diff with youtube.com/video if possible. And if compare google.com with facebook.com, it doesn't make mush sense. But I create a button called 'Diff if full path changed' to allow you to tick for youtube.com/AAA/BBB/CCC and youtube.com/DDD/EEE/FFF to diff.
+The reasons how this rules has been choosen is because of the connections of query string/headers between 2 URLs is most likely depends on filename/last path, instead of the host and middle path. You can imaging that youtube.com/video/a.mp4 shouldn't diff with youtube.com/audio/b.m4a, instead youtube.com/video/a.mp4 should diff with youtube.com/video/b.mp4 if possible. And if compare google.com with facebook.com, it doesn't make mush sense. But I create a button called 'Diff only if host same' to allow you to tick for youtube.com/AAA/BBB/CCC and youtube.com/DDD/EEE/FFF to diff.
 
 ## Some Features ##
 

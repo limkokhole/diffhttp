@@ -1,27 +1,4 @@
 /* jshint esversion: 6 */
-/**
-Handle errors from the injected script.
-Errors may come from evaluating the JavaScript itself
-or from the devtools framework.
-See https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/devtools.inspectedWindow/eval#Return_value
-*/
-/* function handleError(error) {
-  if (error.isError) {
-    console.log(`difftool:handleError: ${error.code}`);
-  } else {
-    console.log(`difftool:handleError: ${error.value}`);
-  }
-} */
-
-/**
-Handle the result of evaluating the script.
-If there was an error, call handleError.
-*/
-/* function handleResult(result) {
-  if (result[1]) {
-    handleError(result[1]);
-  }
-} */
 
 var hole = new diff_match_patch();
 var urls_tbl = document.getElementById("urls_tbl");
@@ -55,7 +32,7 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
   //row.setAttribute('id', "diffhttp_" + rid ); //https://stackoverflow.com/questions/10280250/getattribute-versus-element-object-properties
   row.id = "diffhttp_" + rid;
   row.url = url;
-  //console.log("row id: " + document.getElementById("diffhttp_" + rid));
+  //console.log("row: " + document.getElementById("diffhttp_" + rid));
   let cell1 = row.insertCell(0);
   let cell2 = row.insertCell(1);
   let cell3 = row.insertCell(2);
@@ -66,10 +43,7 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
 
   //start cell STATUS
   let tdDiv = document.createElement("div");
-  //tdDiv.setAttribute('id', "diffhttp_status_" + rid );
   tdDiv.id = "diffhttp_status_" + rid;
-  //tdDiv.setAttribute("class", "sr-only");
-  //tdDiv.textContent = "";
   cell1.appendChild(tdDiv);
   cell1.setAttribute("class", "dotcellNormalParent");
   //END cell STATUS
@@ -114,10 +88,7 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
       respond({
         "tag": "showPostDataWindow",
         "postdata": postDataHTML
-      }); //, "rid":rid, useless since can't pass rid at oncreate window          
-      /*           if (tdDivContainer.style.display === "block") tdDivContainer.style.display = "none";
-                else tdDivContainer.style.display = "block"; */
-      //}
+      }); //, "rid":rid, useless since can't pass rid at oncreate window
     });
   } else {
     let tdDivPre = document.createElement("div");
@@ -172,7 +143,7 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
 
 
   //START cell URL
-  //seems overflow (auto, scroll, none to expand) only work if column put last
+  //seems overflow (auto, scroll, none to expand) only works if column put last
   tdDiv = document.createElement("div");
   tdDiv.setAttribute("class", "dotcellURL");
   if (prevURL !== null) {
@@ -250,9 +221,6 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
 }
 
 function updateURL(rid, statusCode) {
-  //console.log("lala: " + rid + " #statusCode: " + statusCode);
-
-  //console.log("row id 2: " + document.getElementById("diffhttp_" + rid));
   let tdDiv = document.getElementById("diffhttp_status_" + rid);
   if (tdDiv !== null) {
     tdDiv.textContent = statusCode;
@@ -261,10 +229,9 @@ function updateURL(rid, statusCode) {
 }
 
 function sentHeaders(rid, currHeaders, prevHeaders) {
-  //console.log("lala: " + rid + " #currHeaders: " + currHeaders);
-
+  
   //Note that I don't have binaryValue test cast, rf: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/HttpHeaders
-  /* 					for (var header of e.requestHeaders) {
+  /* 					for (var header of currHeaders) {
 						console.log("h name: ");
 						console.log(header.name);
 						console.log("h value:");
@@ -278,7 +245,7 @@ function sentHeaders(rid, currHeaders, prevHeaders) {
   if (cell5 !== null) {
     let tdDiv = document.createElement("div");
     tdDiv.setAttribute("class", "dotcellPOST_UA");
-    if (prevHeaders !== null && prevHeaders !== undefined ) { //if array no such index will undefined
+    if (prevHeaders !== null && prevHeaders !== undefined) { //if array no such index will undefined
       if (currHeaders === null) currHeaders = ""; //can't diff with null
       let diffString = "";
       let humanDiffs = hole.diff_main(prevHeaders, currHeaders);
@@ -333,7 +300,7 @@ function sentHeaders(rid, currHeaders, prevHeaders) {
 
 
 function recvHeaders(rid, currHeaders, prevHeaders) {
-   //console.log(currHeaders);
+  //console.log(currHeaders);
   let cell6 = document.getElementById("diffhttp_rH_" + rid); //sH means sentHeaders
   if (cell6 !== null) {
 
@@ -349,7 +316,7 @@ function recvHeaders(rid, currHeaders, prevHeaders) {
 
     let tdDiv = document.createElement("div");
     tdDiv.setAttribute("class", "dotcellPOST_UA");
-    if (prevHeaders !== null && prevHeaders !== undefined ) { //if array no such index will undefined
+    if (prevHeaders !== null && prevHeaders !== undefined) { //if array no such index will undefined
       if (currHeaders === null) currHeaders = ""; //can't diff with null
       let diffString = "";
       let humanDiffs = hole.diff_main(prevHeaders, currHeaders);
@@ -377,7 +344,7 @@ function recvHeaders(rid, currHeaders, prevHeaders) {
       let tdDivPre = document.createElement("div");
       tdDivPre.setAttribute("class", "dotcellPOST_UA");
       if (currHeaders !== null) {
-        tdDiv.innerHTML = "<b style=\"background-color:#0000ff;color:#ffffff;\">[New]</b>"  + currHeaders;
+        tdDiv.innerHTML = "<b style=\"background-color:#0000ff;color:#ffffff;\">[New]</b>" + currHeaders;
         tdDiv.addEventListener("click", () => {
           let humanDiffs = hole.diff_main("", currHeaders);
           let diffString = hole.diff_prettyHtml(humanDiffs);
@@ -402,37 +369,6 @@ function recvHeaders(rid, currHeaders, prevHeaders) {
   }
 }
 
-/**
-When the user clicks each of the first three buttons,
-evaluate the corresponding script.
-*/
-const evalString = "$0.style.backgroundColor = 'red'";
 document.getElementById("button_clear").addEventListener("click", () => {
-  //var hole = new diff_match_patch();
-  //console.log(hole.diff_prettyHtml(hole.diff_main("https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg?sqp=-oaymwEWCNIBEHZIWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLDi92xCRDXUjA9LE1afIvayq8sQag", "https://i.ytimg.com/vi/tMmMTdc7RE0/hqdefault.jpg?sqp=-oaymwEWCNIBEHZIWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLCnHCQNF3Tfr_LrFA8Gl4L64S5I5g")))
-
-  //urls_tbl.getElementsByTagName("tbody")[0].innerHTML = "";
   urls_tbl_body.innerHTML = "";
 });
-
-
-/**
-const evalString = "$0.style.backgroundColor = 'red'";
-  browser.devtools.inspectedWindow.eval(evalString)
-    .then(handleResult);
-const inspectString = "inspect(document.querySelector('h1'))";
-document.getElementById("button_h1").addEventListener("click", () => {
-    browser.devtools.inspectedWindow.eval(inspectString)
-    .then(handleResult);  
-}); 
-When the user clicks the 'message' button,
-send a message to the background script.
-
-const scriptToAttach = "document.body.innerHTML = 'Hi from the devtools';";
-document.getElementById("button_message").addEventListener("click", () => {
-  browser.runtime.sendMessage({
-    tabId: browser.devtools.inspectedWindow.tabId,
-    script: scriptToAttach
-  });
-});
-*/
