@@ -36,6 +36,7 @@ The reasons how this rules has been choosen is because of the connections of que
 2. Click the [Diff/Same/New/] URL entries to expands if not enough space of height.
 3. Click the Post data and headers entries to open new window to show the [prev][diff][current] side by side comparison.
 4. Hover the top bar buttons to popup functionality tooltip.
+5. Status other than 200 and Method other than GET will highlighted as bold, easier to spot on.
 
 ## Listed in Mozilla Add-on store ##
 Address: https://addons.mozilla.org/en-US/firefox/addon/diff-http/
