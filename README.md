@@ -34,7 +34,7 @@ The reasons how this rules has been choosen is because of the connections of que
 
 1. Click the [Diff] URL entry to reveals the current and previous entry URL.
 2. Click the [Diff/Same/New/] URL entries to expands if not enough space of height.
-3. Click the Post data and headers entries to open new window to show the [prev][diff][current] side by side comparision.
+3. Click the Post data and headers entries to open new window to show the [prev][diff][current] side by side comparison.
 4. Hover the top bar buttons to popup functionality tooltip.
 
 ## Listed in Mozilla Add-on store ##
