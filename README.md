@@ -37,8 +37,8 @@ The reasons how this rules has been choosen is because of the connections of que
 3. Click the Post data and headers entries to open new window to show the [prev][diff][current] side by side comparision.
 4. Hover the top bar buttons to popup functionality tooltip.
 
-## Why I don't submit Add-on to Mozilla ? ##
-Reviewer very strict on usage of innerHTML, since I have no choice to use innerHTML to shows the result from "diff_match_patch.js" library as color highlighted, so I don't think I have a chance to list this extension in Mozilla Add-on. You are so lucky if you found here :)
+## Listed in Mozilla Add-on store ##
+Address: https://addons.mozilla.org/en-US/firefox/addon/diff-http/
 
 ## Demonstration video (Click image to play at YouTube): ##
 
