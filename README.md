@@ -1,6 +1,6 @@
 # Diff HTTP
 
-**Diff the network traffic in real-time to gain quick understanding of the structure of a website.**
+**Diff the network traffic in real-time to observe the urls variety over the time.**
 
 ## Brief ##
 
@@ -10,7 +10,7 @@ Note that the Post data and headers are choosen depends on it's URL.
 
 Currently no support on Private Window.
 
-You can load the extension from about:debugging, by click "Load temporary Add-on", then navigate to the downloaded folder, click first depth files(not directory) like manifest.json to load.
+You can load the extension code from about:debugging, by click "Load temporary Add-on", then navigate to the downloaded folder, click first depth files(not directory) like manifest.json to load.
 
 The panel will shows blank if you click the "Diff HTTP" tab before "Inspector" tab loading done, see https://bugzilla.mozilla.org/show_bug.cgi?id=1424515
 
