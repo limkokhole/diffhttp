@@ -16,6 +16,10 @@ The panel will shows blank if you click the "Diff HTTP" tab before "Inspector" t
 
 You may need to upgrade your firefox to lastest version (v58 or v59) if panel doesn't capture anything.
 
+Change panel black theme to white by navigate: about:config -> devtools.theme -> double-click the "black" Value and edit it to "white".
+
+Due to current "Received Headers" may slower response than previous "Received Headers", i.e. the chosen current entry get "Received Headers" early but no previous "Received Headers" yet to diff, so you may found "Received Headers" mark as "[New]" instead of desired "[Same]/[Diff]". This case can be spot if any other field are not [New].
+
 ## Logic behind the scene ##
 
 Everytime the URL captured insert to the table, the all entries list will be sort right away. Due to the list is always has been sorted, so it can simply pick 2 closest siblings. Then it will try to calculate the diff count for both siblings, and try to pick the CLOSEST MATCH sibling. If it did match "The Rules" below, then it will choosen to diff with the current entry. If the CLOSEST MATCH sibling doesn't match "The Rules", then it will try the 2nd CLOSEST MATCH to test the "The Rules". If both sibling failed to pass the test of "The Rules", then it will give up and mark current entry as [New].

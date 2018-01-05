@@ -284,12 +284,18 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
 				} else if (msg.tag === "update") {
 					_window.updateURL(items.requestId, items.statusCode);
 				} else if (msg.tag === "sentHeaders") {
+					items.requestHeaders.sort(function(a, b) { //rf: https://stackoverflow.com/a/979289/1074998
+                                            return a.name.localeCompare(b.name);
+                                        });
 					let sentHeadersJson = JSON.stringify(items.requestHeaders, null, 3);
 					itemReqHeaders[items.requestId] = sentHeadersJson;
 					let prevHeadersJson = itemReqHeaders[itemReqIds[items.requestId]];
 					//console.log("lol: " + items.requestId + " #currHeaders: " + items.requestHeader);
 					_window.sentHeaders(items.requestId, sentHeadersJson, prevHeadersJson);
 				} else if (msg.tag === "recvHeaders") {
+					items.responseHeaders.sort(function(a, b) {
+                                            return a.name.localeCompare(b.name);
+                                        });
 					let recvHeadersJson = JSON.stringify(items.responseHeaders, null, 3);
 					itemRecvHeaders[items.requestId] = recvHeadersJson;
 					let prevRecvHeadersJson = itemRecvHeaders[itemReqIds[items.requestId]];
