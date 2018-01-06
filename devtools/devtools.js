@@ -76,6 +76,7 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
 	let itemReqIds = {};
 	let itemReqHeaders = {};
 	let itemRecvHeaders = {};
+	let waitHeadersIds = {};
 
 	let checkPause;
 	let checkedAllWeb;
@@ -275,9 +276,33 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
 						':' + (st.getMinutes() < 10 ? '0' + st.getMinutes() : st.getMinutes()) +
 						':' + (st.getSeconds() < 10 ? '0' + st.getSeconds() : st.getSeconds());
 
-					itemReqIds[items.requestId] = prevReqId;
-					let it = [items.url, qArr, postedString, items.requestId]; //[todo:0] remake url with sorted qArr
+					
+					//we must store "" if exist, not null which means not exist to be evalutate next time
+					//, but don't direct set postedString to "" here since we nid null in this round in js-pnael.js
+					let it;
+					if (postedString === null) {
+						it = [items.url, qArr, "", items.requestId]; //[todo:0] remake url with sorted qArr
+					} else {
+						it = [items.url, qArr, postedString, items.requestId]; //[todo:0] remake url with sorted qArr
+					}
 					itemRequestRecordURLs.splice(insertIndex, 0, it);
+
+/* 					let sameStr;
+					let prevExist = true;
+					if (prevPostData !== null) {
+						if (prevPostData === postedString) {
+							sameStr = true;
+						} else {
+							sameStr = false;
+						}
+					} else {
+						prevExist = false;
+					}
+					console.log(prevReqId + " :prevExist 1: " + prevExist);
+					itemReqIds[items.requestId] = [prevReqId, prevExist]; */
+					itemReqIds[items.requestId] = prevReqId;
+
+					//console.log(items.requestId + " id:URL " + items.url);
 
 					//itemRequestRecordURLs.unshift([prefixURL, items.url, qArr, postedString]); //unshift() to add beginning instead of push()
 					//itemRequestRecordURLs.push( [prefixURL, items.url, qArr] );
@@ -299,9 +324,40 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
                                         });
 					let recvHeadersJson = JSON.stringify(items.responseHeaders, null, 3);
 					itemRecvHeaders[items.requestId] = recvHeadersJson;
-					let prevRecvHeadersJson = itemRecvHeaders[itemReqIds[items.requestId]];
+					let prevHeadersId = itemReqIds[items.requestId];
+					let prevRecvHeadersJson;
+					if (prevHeadersId !== null) {
+						prevRecvHeadersJson = itemRecvHeaders[prevHeadersId];
+						if (prevRecvHeadersJson  === undefined) {
+							let existingIds = waitHeadersIds[prevHeadersId];
+							if (existingIds === undefined) existingIds = [];
+							let giveUpPushDuplicated = false;
+							for (let exId of existingIds) {
+								if (items.requestId === exId) giveUpPushDuplicated = true;
+							}
+							if (!giveUpPushDuplicated) existingIds.push(items.requestId);
+							waitHeadersIds[prevHeadersId] = existingIds;
+						}
+					} //else prevRecvHeadersJson keep undefined
 					//console.log("lol: " + items.requestId + " #currHeaders: " + items.responseHeaders);
-					_window.recvHeaders(items.requestId, recvHeadersJson, prevRecvHeadersJson);
+
+/* 					let reviveIdsDebug = waitHeadersIds[items.requestId];
+					if (reviveIdsDebug !== undefined) console.log(items.requestId + "revive PRE recvHeadersJson: " + recvHeadersJson);
+ */
+					_window.recvHeaders(items.requestId, recvHeadersJson, prevRecvHeadersJson, prevHeadersId, false);
+
+					let reviveIds = waitHeadersIds[items.requestId];
+					if (reviveIds !== undefined) {
+						for (let reviveId of reviveIds) {
+							reviveRecvHeadersJson = itemRecvHeaders[reviveId];
+/* 							console.log("reviveId: " + reviveId);
+							console.log("reviveId recvHeadersJson: " + recvHeadersJson); */
+							_window.recvHeaders(reviveId, reviveRecvHeadersJson, recvHeadersJson, items.requestId, true);
+						}
+						//don't remove since it can return second time with more data (.e.g "keep-alive" become  "Accept-Ranges")
+						//and hard-code remove only after 2nd time is overkill, ids shouldn't take much space
+						//delete waitHeadersIds[items.requestId]; //remove reviveIds after done
+					}
 				}
 			} else {
 				//console.log("skip :p");
@@ -340,6 +396,7 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
 			itemReqIds = {};
 			itemReqHeaders = {};
 			itemRecvHeaders = {};
+			waitHeadersIds = {};
 		});
 
 

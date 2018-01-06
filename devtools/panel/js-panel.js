@@ -65,13 +65,11 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
   tdDiv = document.createElement("div");
   tdDiv.setAttribute("class", "dotcellPOST_UA");
   if (prevPostData !== null) {
-    let sameStr = false;
     if (postedString === null) postedString = ""; //can't diff with null
     let diffString = "";
     let humanDiffs = hole.diff_main(prevPostData, postedString);
     hole.diff_cleanupSemantic(humanDiffs);
     if (prevPostData === postedString) {
-      sameStr = true;
       tdDiv.innerHTML = "<div style=\"background-color:#00ffff;color:#000000;\"><b>[Same]</b>" + currTime + "</div>" + hole.diff_prettyHtml(humanDiffs);
     } else {
       diffString = hole.diff_prettyHtml(humanDiffs);
@@ -101,7 +99,7 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
       tdDivContainerNoPrev.appendChild(tdDivPre);
       /*          let str = hole.diff_prettyHtml(hole.diff_main(postedString, postedString));
               str = str.replace(/&para;/g, ''); 
-              tdDiv.innerHTML = "<br>" + str + "</pre>"; */ //after convert from diff, the indent will lose
+              tdDiv.innerHTML = "<br>" + str + "</pre>"; */ //after convert from diff, the indent will loseprevRecvHeadersJson
       tdDiv.innerHTML = "<pre>" + postedString + "</pre>";
       //console.log(hole.diff_prettyHtml(hole.diff_main(postedString, postedString)));
       tdDivContainerNoPrev.addEventListener("click", () => {
@@ -120,7 +118,7 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
       tdDivContainerNoPrev.appendChild(tdDiv);
       cell4.appendChild(tdDivContainerNoPrev);
     } else {
-      tdDivPre.textContent = "[New] " + currTime; //None
+      tdDivPre.textContent = "[None] " + currTime;
       tdDivPre.style.color = "White";
       tdDivPre.style.backgroundColor = "Black";
       cell4.appendChild(tdDivPre);
@@ -289,7 +287,7 @@ function sentHeaders(rid, currHeaders, prevHeaders) {
         });
         cell5.appendChild(tdDiv);
       } else { //unlikely no headers
-        tdDivPre.textContent = "[New]"; //None
+        tdDivPre.textContent = "[None]";
         tdDivPre.style.color = "White";
         tdDivPre.style.backgroundColor = "Black";
         cell5.appendChild(tdDivPre);
@@ -299,14 +297,15 @@ function sentHeaders(rid, currHeaders, prevHeaders) {
 }
 
 
-function recvHeaders(rid, currHeaders, prevHeaders) {
-  //console.log(currHeaders);
+function recvHeaders(rid, currHeaders, prevHeaders, prevHeadersId, fromRevive) {
+  //console.log(rid + " :win: " + currHeaders);
   let cell6 = document.getElementById("diffhttp_rH_" + rid); //sH means sentHeaders
   if (cell6 !== null) {
 
     //for unknown reason, it may return twice for single request (e.g. youtube's  https://i.ytimg.com/vi/)
     //, but the 2nd has more data than the 1st, so this will replace the 1st
     //, rf: https://stackoverflow.com/a/11776682/1074998 , https://stackoverflow.com/a/15771070/1074998
+    // [UPDATE] this also help to replace older elem after revive from wait prev headers
     if (cell6.childElementCount > 0) {
       let last;
       while (last = cell6.lastChild) {
@@ -316,16 +315,24 @@ function recvHeaders(rid, currHeaders, prevHeaders) {
 
     let tdDiv = document.createElement("div");
     tdDiv.setAttribute("class", "dotcellPOST_UA");
-    if (prevHeaders !== null && prevHeaders !== undefined) { //if array no such index will undefined
+    if (prevHeadersId !== null) {
+      //if array no such index will undefined
+      let waitPrevHeaders = false
+      if (prevHeaders === undefined) waitPrevHeaders = true;
+      if ( (prevHeaders === null) || (prevHeaders === undefined) )  prevHeaders = "";
       if (currHeaders === null) currHeaders = ""; //can't diff with null
       let diffString = "";
       let humanDiffs = hole.diff_main(prevHeaders, currHeaders);
       hole.diff_cleanupSemantic(humanDiffs);
-      if (prevHeaders === currHeaders) {
-        tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Same]</b>" + hole.diff_prettyHtml(humanDiffs);
+      if (waitPrevHeaders) {
+        tdDiv.innerHTML = "<b style=\"background-color:#aa00ff;color:#ffffff;\">[Wait]</b>" + hole.diff_prettyHtml(humanDiffs);
+      } else if (prevHeaders === currHeaders) {
+        if (!fromRevive) tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Same]</b>" + hole.diff_prettyHtml(humanDiffs);
+        else tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Waited:Same]</b>" + hole.diff_prettyHtml(humanDiffs);
       } else {
         diffString = hole.diff_prettyHtml(humanDiffs);
-        tdDiv.innerHTML = "<b style=\"background-color:#ff00bf;color:#000000;\">[&nbsp;Diff&nbsp;]</b>" + diffString;
+        if (!fromRevive) tdDiv.innerHTML = "<b style=\"background-color:#ff00bf;color:#000000;\">[&nbsp;Diff&nbsp;]</b>" + diffString;
+        else tdDiv.innerHTML = "<b style=\"background-color:#ff00bf;color:#000000;\">[&nbsp;Waited:Diff&nbsp;]</b>" + diffString;
       }
       cell6.appendChild(tdDiv);
       cell6.appendChild(document.createElement("br"));
@@ -360,7 +367,7 @@ function recvHeaders(rid, currHeaders, prevHeaders) {
         });
         cell6.appendChild(tdDiv);
       } else { //unlikely no headers
-        tdDivPre.textContent = "[New]"; //None
+        tdDivPre.textContent = "[None]";
         tdDivPre.style.color = "White";
         tdDivPre.style.backgroundColor = "Black";
         cell6.appendChild(tdDivPre);
