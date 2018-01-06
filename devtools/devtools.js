@@ -88,12 +88,13 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
 	port.onMessage.addListener((msg) => {
 		//console.log("tabId: " + msg.tabId + " #this.tabId: " + tabId);
 		if (_window) {
-			let items = msg.items;
 
 			if (checkPause.checked) {
 				return;
 				//if (msg.tag === "add") return;
 			}
+
+			let items = msg.items;
 
 			if (checkIncludeDataURI && !checkIncludeDataURI.checked) {
 				//rf: https://en.wikipedia.org/wiki/Media_type
