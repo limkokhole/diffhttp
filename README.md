@@ -4,9 +4,13 @@
 
 ## Brief ##
 
-This extension capture network traffic in developer tools Diff HTTP tab, and then diff the current entry (URL/Post data/Sent Headers/Received Headers) with the previous CLOSEST MATCH entries if meet "The Rules". The first entry will always marked as [New] since no previous entry. The second entry and the following may mark as any of [New]/[Diff]/[Same] after it meets the rule and diff.
+This extension capture network traffic in developer tools Diff HTTP tab, and then diff the current entry (URL/Post data/Sent Headers/Received Headers) with the previous CLOSEST MATCH entries if meet "The Rules". The first entry will always marked as [New] since no previous entry. The second entry and the following may mark as any of [New]/[Diff]/[Same] after it meets the rule and diff. 
 
 Note that the Post data and headers are choosen depends on it's URL.
+
+Mark as [None] if no prev rules AND curr no post data and headers. Normal in post data. But it will mark as [Same] if got prev rules AND curr no post data and headers.
+
+Mark as [Wait] in "Recv Headers" if prev URL's "Recv Headers" still empty, it may updated to [Waited:Diff|Same] later after received prev "Recv Headers".
 
 Currently no support on Private Window.
 
