@@ -99,7 +99,7 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
       tdDivContainerNoPrev.appendChild(tdDivPre);
       /*          let str = hole.diff_prettyHtml(hole.diff_main(postedString, postedString));
               str = str.replace(/&para;/g, ''); 
-              tdDiv.innerHTML = "<br>" + str + "</pre>"; */ //after convert from diff, the indent will loseprevRecvHeadersJson
+              tdDiv.innerHTML = "<br>" + str + "</pre>"; */ //after convert from diff, the indent will lose
       tdDiv.innerHTML = "<pre>" + postedString + "</pre>";
       //console.log(hole.diff_prettyHtml(hole.diff_main(postedString, postedString)));
       tdDivContainerNoPrev.addEventListener("click", () => {
