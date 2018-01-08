@@ -70,7 +70,7 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
     let humanDiffs = hole.diff_main(prevPostData, postedString);
     hole.diff_cleanupSemantic(humanDiffs);
     if (prevPostData === postedString) {
-      tdDiv.innerHTML = "<div style=\"background-color:#00ffff;color:#000000;\"><b>[Same]</b>" + currTime + "</div>" + hole.diff_prettyHtml(humanDiffs);
+      tdDiv.innerHTML = "<div style=\"background-color:#00ffff;color:#000000;\"><b>[Same]</b>&nbsp;" + currTime + "</div>" + hole.diff_prettyHtml(humanDiffs);
     } else {
       diffString = hole.diff_prettyHtml(humanDiffs);
       tdDiv.innerHTML = "<div style=\"background-color:#ff00bf;color:#000000;\"><b>[&nbsp;Diff&nbsp;]</b>&nbsp;" + currTime + "</div>" + diffString;
