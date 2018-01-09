@@ -12,6 +12,8 @@ Mark as [None] if no prev rules AND curr no post data and headers. Normal in pos
 
 Mark as [Wait] in "Recv Headers" if prev URL's "Recv Headers" still empty, it may updated to [Waited:Diff|Same] later after received prev "Recv Headers".
 
+[Same] in "Post data" which is [None] data will underline with black padding.
+
 Currently no support on Private Window.
 
 You can load the extension code from about:debugging, by click "Load temporary Add-on", then navigate to the downloaded folder, click first depth files(not directory) like manifest.json to load.
@@ -45,6 +47,7 @@ The reasons how this rules has been choosen is because of the connections of que
 3. Click the Post data and headers entries to open new window to show the [prev][diff][current] side by side comparison.
 4. Hover the top bar buttons to popup functionality tooltip.
 5. Status other than 200 and Method other than GET will highlighted as bold, easier to spot on.
+6. Click "Diff" button to manually diff the text you want, or direct edit the fields on popup window then click "Diff" button to diff.
 
 ## Listed in Mozilla Add-on store ##
 Address: https://addons.mozilla.org/en-US/firefox/addon/diff-http/

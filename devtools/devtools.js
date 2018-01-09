@@ -49,8 +49,9 @@ function binarySearch(a, low, high, key) {
 
 //var tabId = 'diffHTTP_' + browser.devtools.inspectedWindow.tabId;
 
+//absolute path without '/' work here, but for consistent with js which must prefix with '/', so add '/' here
 //rf: https://stackoverflow.com/questions/11661613/chrome-devpanel-extension-communicating-with-background-page
-browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/panel.html", (extensionPanel) => {
+browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/panel.html", (extensionPanel) => {
 
 	let tabId = 'diffHTTP_' + browser.devtools.inspectedWindow.tabId;
 
@@ -397,6 +398,17 @@ browser.devtools.panels.create("Diff HTTP", "icons/star.png", "devtools/panel/pa
 			itemReqHeaders = {};
 			itemRecvHeaders = {};
 			waitHeadersIds = {};
+		});
+		_window.document.getElementById("button_diff_manual").addEventListener("click", () => {
+			let postDataHTML = {
+				prevPostData: "<br>",
+				diffString: "<br>",
+				postedString: "<br>"
+			  };
+			  _window.respond({
+				"tag": "showPostDataWindow",
+				"postdata": postDataHTML
+			  });
 		});
 
 

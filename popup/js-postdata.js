@@ -14,12 +14,22 @@ browser.runtime.onMessage.addListener(async(msg, sender) => {
             let prevPostData_row = document.getElementById("prevPostData");
             let diffString_row = document.getElementById("diffString");
             let postedString_row = document.getElementById("postedString");
+            let manual_diff_btn = document.getElementById("button_diff_manual");
 
             //nid <pre></pre> for indent effect
             prevPostData_row.innerHTML = "<pre style=\"overflow-x:scroll\">" + msg.msg.postdata.prevPostData + "</pre>";
             diffString_row.innerHTML = "<pre style=\"overflow-x:scroll\">" + msg.msg.postdata.diffString + "</pre>";
             postedString_row.innerHTML = "<pre style=\"overflow-x:scroll\">" + msg.msg.postdata.postedString + "</pre>";
             //postedString_row.click();
+            let hole = new diff_match_patch();
+
+            manual_diff_btn.addEventListener("click", function(){
+                //MUST use innerText instead of textContent to accept newline when diff
+                //, ref: https://stackoverflow.com/a/9330754/1074998
+                let humanDiffs = hole.diff_main(prevPostData_row.innerText, postedString_row.innerText);
+                let diffString = hole.diff_prettyHtml(humanDiffs);
+                diffString_row.innerHTML = "<pre style=\"overflow-x:scroll\">" + diffString + "</pre>";
+            });
 
         }
     }

@@ -28,29 +28,55 @@
             background-color: #fffff;
             color: black;
         }
+
+        .button_diff_manual input[type="button"] {
+            font: 2.4em Futura, ‘Century Gothic’, AppleGothic, sans-serif;
+            font-size: 80%;
+            padding: 5px;
+            background-color: rgba(255, 0, 255, 0.2);
+            border: 1px solid #6b066b;
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+            border-bottom: 1px solid #9f9f9f;
+            -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+        }
+
+        .button_diff_manual input[type="button"]:hover {
+            background-color: rgba(255, 0, 255, 1);
+        }
     </style>
 </head>
 
 <body>
+    <p style="font-size: 70%;">Note: You can edit [Prev] and [Curr] fields and click &quot;Diff&quot; button to diff</p>
     <table id="postdata">
         <tr>
             <th>
                 <b style="background-color:#ff0004;">[Prev]</b>
             </th>
-            <th>Diff</th>
+            <th>
+                <label class="button_diff_manual">
+                    <input type="button" id="button_diff_manual" value="&nbsp;Diff&nbsp;" title="Diff manually" />
+                </label>
+            </th>
             <th>
                 <b style="background-color:#0cff00;">[Curr]</b>
             </th>
         </tr>
         <tr>
-            <td id="prevPostData"></td>
+            <td contenteditable='true' id="prevPostData"></td>
             <td id="diffString"></td>
-            <td id="postedString"></td>
+            <td contenteditable='true' id="postedString"></td>
         </tr>
     </table>
 </body>
 <!-- https://bugzilla.mozilla.org/show_bug.cgi?id=1267027 -->
 <!-- MUST include js to run, can't direct code js here -->
+<script src="/devtools/panel/diff_match_patch.js"></script>
 <script src="js-postdata.js">
 </script>
 
