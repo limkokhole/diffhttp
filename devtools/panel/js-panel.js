@@ -159,9 +159,9 @@ function addURL(rid, prevReqId, method, url, prevURL, postedString, prevPostData
 
     if (prevURL === url) { //== must compare here instead of devtools.js early otherwise will always [New] if duplicated
       sameUrl = true;
-      tdDiv.innerHTML = "<b title='" + rid + "' style=\"background-color:#00ffff;color:#000000;\">[Same]</b> " + hole.diff_prettyHtml(humanDiffs);
+      tdDiv.innerHTML = "<b title='" + rid + " (Prev: " +  prevReqId + ")' style=\"background-color:#00ffff;color:#000000;\">[Same]</b> " + hole.diff_prettyHtml(humanDiffs);
     } else {
-      tdDiv.innerHTML = "<b title='" + rid + "' style=\"background-color:#ff00bf;color:#000000;\">[&nbsp;Diff&nbsp;]</b>&nbsp; " + hole.diff_prettyHtml(humanDiffs);
+      tdDiv.innerHTML = "<b title='" + rid + " (Prev: " +  prevReqId + ")' style=\"background-color:#ff00bf;color:#000000;\">[&nbsp;Diff&nbsp;]</b>&nbsp; " + hole.diff_prettyHtml(humanDiffs);
     }
 
     cell3.appendChild(tdDiv);

@@ -48,7 +48,7 @@ The reasons how this rules has been choosen is because of the connections of que
 4. Hover the top bar buttons to popup functionality tooltip.
 5. Status other than 200 and Method other than GET will highlighted as bold, easier to spot on.
 6. Click "Diff" button to manually diff the text you want, or direct edit the fields on popup window then click "Diff" button to diff.
-7. Hover [Diff/Same/New/Curr/Prev] on URL entries will popup request id, unique on web browser session. Since you may filter data URI, so some id numbers may skip.
+7. Hover [Diff/Same/New/Curr/Prev] on URL entries will popup network request id, unique on this web browser session. Since you may filter data URI, so some id numbers may skip.
 
 ## Listed in Mozilla Add-on store ##
 Address: https://addons.mozilla.org/en-US/firefox/addon/diff-http/
