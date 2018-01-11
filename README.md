@@ -14,6 +14,8 @@ Mark as [Wait] in "Recv Headers" if prev URL's "Recv Headers" still empty, it ma
 
 [Same] in "Post data" which is [None] data will underline with black padding.
 
+## Something is broken ? ##
+
 Currently no support on Private Window.
 
 You can load the extension code from about:debugging, by click "Load temporary Add-on", then navigate to the downloaded folder, click first depth files(not directory) like manifest.json to load.
@@ -23,8 +25,6 @@ The panel will shows blank if you click the "Diff HTTP" tab before "Inspector" t
 You may need to upgrade your firefox to lastest version (v58 or v59) if panel doesn't capture anything.
 
 Change panel black theme to white by navigate: about:config -> devtools.theme -> double-click the "black" Value and edit it to "white".
-
-Due to current "Received Headers" may slower response than previous "Received Headers", i.e. the chosen current entry get "Received Headers" early but no previous "Received Headers" yet to diff, so you may found "Received Headers" mark as "[New]" instead of desired "[Same]/[Diff]". This case can be spot if any other field are not [New].
 
 ## Logic behind the scene ##
 
