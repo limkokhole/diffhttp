@@ -15,7 +15,7 @@ function escapeHTML(unsafe_str) {
     .replace(/\//g, '&#x2F;');
 }
 
-function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime) {
+function addURL(rid, prevReqId, method, url, prevURL, postedString, prevPostData, currTime) {
 
   //let table = document.getElementById("urls");
 
@@ -28,6 +28,12 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
       prevURL = prevRow.url;
   }
   */
+
+  //Hover [tag]'s tooltip, reasons of rid better than count table length:
+  //[1] no nid re-count(not sure internal implementation though)
+  //[2] can refer id with other tab if use All Tabs
+  //[3] nid array store manually prev count, can't simply rely on table len
+  //urls_tbl_body.getElementsByTagName("tr").length;
 
   //row.setAttribute('id', "diffhttp_" + rid ); //https://stackoverflow.com/questions/10280250/getattribute-versus-element-object-properties
   row.id = "diffhttp_" + rid;
@@ -153,9 +159,9 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
 
     if (prevURL === url) { //== must compare here instead of devtools.js early otherwise will always [New] if duplicated
       sameUrl = true;
-      tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Same]</b> " + hole.diff_prettyHtml(humanDiffs);
+      tdDiv.innerHTML = "<b title='" + rid + "' style=\"background-color:#00ffff;color:#000000;\">[Same]</b> " + hole.diff_prettyHtml(humanDiffs);
     } else {
-      tdDiv.innerHTML = "<b style=\"background-color:#ff00bf;color:#000000;\">[&nbsp;Diff&nbsp;]</b>&nbsp; " + hole.diff_prettyHtml(humanDiffs);
+      tdDiv.innerHTML = "<b title='" + rid + "' style=\"background-color:#ff00bf;color:#000000;\">[&nbsp;Diff&nbsp;]</b>&nbsp; " + hole.diff_prettyHtml(humanDiffs);
     }
 
     cell3.appendChild(tdDiv);
@@ -183,8 +189,8 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
     if (!sameUrl) {
       cell3.appendChild(document.createElement("br"));
       let tdDivPost = document.createElement("div");
-      tdDivPost.innerHTML = "<pre><b style=\"background-color:#0cff00;\">[Curr]</b><br>" + url +
-        "<br><br><b style=\"background-color:#ff0004;\">[Prev]</b><br>" + prevURL + "</pre>";
+      tdDivPost.innerHTML = "<pre><b title='" + rid + "' style=\"background-color:#0cff00;\">[Curr]</b><br>" + url +
+        "<br><br><b title='" + prevReqId + "' style=\"background-color:#ff0004;\">[Prev]</b><br>" + prevURL + "</pre>";
       tdDivPost.style.overflow = "scroll";
       tdDivContainer.appendChild(tdDivPost);
       tdDivContainer.style.display = "none";
@@ -202,7 +208,7 @@ function addURL(rid, method, url, prevURL, postedString, prevPostData, currTime)
     //to try match the start position x of url with other [SAME]/[Diff], add &nbsp; extra spaces
     //tdDiv.innerHTML = '<b style="background-color:#0000ff;color:#ffffff;">[&nbsp;New&nbsp;]</b><span> ' + url + '</span>';
 
-    tdDiv.innerHTML = '<b style="background-color:#0000ff;color:#ffffff;">[&nbsp;New&nbsp;]</b><span> ' + escapeHTML(url) + '</span>';
+    tdDiv.innerHTML = '<b title="' + rid + '" style="background-color:#0000ff;color:#ffffff;">[&nbsp;New&nbsp;]</b><span> ' + escapeHTML(url) + '</span>';
     tdDiv.addEventListener("click", () => {
       if (tdDiv.style.maxHeight === "none") {
         tdDiv.style.maxHeight = "6.6em";

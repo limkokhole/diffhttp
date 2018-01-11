@@ -27,6 +27,7 @@ browser.runtime.onMessage.addListener(async(msg, sender) => {
                 //MUST use innerText instead of textContent to accept newline when diff
                 //, ref: https://stackoverflow.com/a/9330754/1074998
                 let humanDiffs = hole.diff_main(prevPostData_row.innerText, postedString_row.innerText);
+		hole.diff_cleanupSemantic(humanDiffs);
                 let diffString = hole.diff_prettyHtml(humanDiffs);
                 diffString_row.innerHTML = "<pre style=\"overflow-x:scroll\">" + diffString + "</pre>";
             });

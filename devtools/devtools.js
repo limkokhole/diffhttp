@@ -307,7 +307,7 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 
 					//itemRequestRecordURLs.unshift([prefixURL, items.url, qArr, postedString]); //unshift() to add beginning instead of push()
 					//itemRequestRecordURLs.push( [prefixURL, items.url, qArr] );
-					_window.addURL(items.requestId, items.method, items.url, prevURL, postedString, prevPostData, currTime);
+					_window.addURL(items.requestId, prevReqId, items.method, items.url, prevURL, postedString, prevPostData, currTime);
 				} else if (msg.tag === "update") {
 					_window.updateURL(items.requestId, items.statusCode);
 				} else if (msg.tag === "sentHeaders") {
