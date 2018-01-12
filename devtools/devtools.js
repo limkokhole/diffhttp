@@ -188,7 +188,7 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 							sliceFullPath = true;
 						}
 
-						let slash_l = items.url.split("/");
+						let slash_l = items.url.split('?')[0].split('#')[0].split("/");
 						let checkPrefixCurrURL;
 						if (!sliceFullPath) {
 							if (slash_l.length >= 4) { //extra trailing slash work except https://connect.facebook.net/a/b/?c case, which b will be compare
@@ -200,7 +200,9 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 							checkPrefixCurrURL = slash_l.slice(0, 3).join('/');
 						}
 
-						slash_l = prevURL.split("/");
+						//nid ? and # to avoid url below which unable diff(mark as [New]) due to trailing "https://":
+						//https://www.blogger.com/blog-post-reactions.g?options=%5B%BC%5D&textColor=%23000000#https://zkteh.blogspot.com/2017/09/business-hours-details.html
+						slash_l = prevURL.split('?')[0].split('#')[0].split("/");
 						let checkPrefixPrevURL;
 						if (!sliceFullPath) {
 							if (slash_l.length >= 4) {
@@ -219,7 +221,7 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 								prevPostData = compareIt[2];
 								prevReqId = compareIt[3];
 
-								slash_l = prevURL.split("/");
+								slash_l = prevURL.split('?')[0].split('#')[0].split("/");
 								if (!sliceFullPath) {
 									if (slash_l.length >= 4) {
 										checkPrefixPrevURL = slash_l.slice(0, -1).join('/');
