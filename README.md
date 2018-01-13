@@ -16,15 +16,17 @@ Mark as [Wait] in "Recv Headers" if prev URL's "Recv Headers" still empty, it ma
 
 ## Something is broken ? ##
 
-Currently no support on Private Window.
+1. Currently no support on Private Window.
 
-You can load the extension code from about:debugging, by click "Load temporary Add-on", then navigate to the downloaded folder, click first depth files(not directory) like manifest.json to load.
+2. You can load the extension code from about:debugging, by click "Load temporary Add-on", then navigate to the downloaded folder, click first depth files(not directory) like manifest.json to load.
 
-The panel will shows blank if you click the "Diff HTTP" tab before "Inspector" tab loading done, see https://bugzilla.mozilla.org/show_bug.cgi?id=1424515
+3. The panel will shows blank if you click the "Diff HTTP" tab before "Inspector" tab loading done, see https://bugzilla.mozilla.org/show_bug.cgi?id=1424515
 
-You may need to upgrade your firefox to lastest version (v58 or v59) if panel doesn't capture anything.
+4. You may need to upgrade your firefox to lastest version (v58 or v59) if panel doesn't capture anything.
 
-Change panel black theme to white by navigate: about:config -> devtools.theme -> double-click the "black" Value and edit it to "white".
+5. Change panel black theme to white by navigate: about:config -> devtools.theme -> double-click the "black" Value and edit it to "white".
+
+6.  You should open a new tab to continue your task after done with this extension since currently no way to remove listeners once run on current tab even though inspector window has been closed.
 
 ## Logic behind the scene ##
 
@@ -56,10 +58,7 @@ Address: https://addons.mozilla.org/en-US/firefox/addon/diff-http/
 
 ## Demonstration video (Click image to play at YouTube): ##
 
-[![watch in youtube](https://i.ytimg.com/vi/ZIeJ4uRhD5w/hqdefault.jpg)](https://www.youtube.com/watch?v=ZIeJ4uRhD5w "Diff HTTP")
-
-## Demonstration video version 2.3 (Click image to play at YouTube): ##
-[![Version 2.3](https://i.ytimg.com/vi/KFJKMVvbAA0/hqdefault.jpg)](https://www.youtube.com/watch?v=KFJKMVvbAA0 "Diff HTTP")
+[![watch in youtube](https://i.ytimg.com/vi/ZIeJ4uRhD5w/hqdefault.jpg)](https://www.youtube.com/watch?v=wiovFFOgl-s "Diff HTTP")
 
 
 
