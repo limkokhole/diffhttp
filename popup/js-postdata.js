@@ -2,7 +2,7 @@
 //console.log("running popup script 0");
 let tabUrl = null;
 
-browser.runtime.onMessage.addListener(async(msg, sender) => {
+browser.runtime.onMessage.addListener(async (msg, sender) => {
     /*     console.log(msg);
         console.log(sender); */
     if (sender.id === browser.runtime.id) {
@@ -14,7 +14,15 @@ browser.runtime.onMessage.addListener(async(msg, sender) => {
             let prevPostData_row = document.getElementById("prevPostData");
             let diffString_row = document.getElementById("diffString");
             let postedString_row = document.getElementById("postedString");
+            let label_prev_title = document.getElementById("label_prev_title");
+            let label_curr_title = document.getElementById("label_curr_title");
             let manual_diff_btn = document.getElementById("button_diff_manual");
+
+            let prevURL = msg.msg.postdata.prevURL;
+            if ((prevURL === null) || (prevURL === "")) label_prev_title.title = "<No url>"; //to easy to know no url, better always set
+            else label_prev_title.title = msg.msg.postdata.prevURL;
+
+            label_curr_title.title = msg.msg.postdata.currURL;
 
             //nid <pre></pre> for indent effect
             prevPostData_row.innerHTML = "<pre style=\"overflow-x:scroll\">" + msg.msg.postdata.prevPostData + "</pre>";
@@ -23,11 +31,11 @@ browser.runtime.onMessage.addListener(async(msg, sender) => {
             //postedString_row.click();
             let hole = new diff_match_patch();
 
-            manual_diff_btn.addEventListener("click", function(){
+            manual_diff_btn.addEventListener("click", function () {
                 //MUST use innerText instead of textContent to accept newline when diff
                 //, ref: https://stackoverflow.com/a/9330754/1074998
                 let humanDiffs = hole.diff_main(prevPostData_row.innerText, postedString_row.innerText);
-		hole.diff_cleanupSemantic(humanDiffs);
+                hole.diff_cleanupSemantic(humanDiffs);
                 let diffString = hole.diff_prettyHtml(humanDiffs);
                 diffString_row.innerHTML = "<pre style=\"overflow-x:scroll\">" + diffString + "</pre>";
             });

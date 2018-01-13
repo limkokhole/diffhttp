@@ -44,11 +44,12 @@ The reasons how this rules has been choosen is because of the connections of que
 
 1. Click the [Diff] URL entry to reveals the current and previous entry URL.
 2. Click the [Diff/Same/New/] URL entries to expands if not enough space of height.
-3. Click the Post data and headers entries to open new window to show the [prev][diff][current] side by side comparison.
+3. Click the Post data and headers entries to open new window to show the [prev][diff][current] side by side comparison. Non-json post data will splits by '&' and sorted.
 4. Hover the top bar buttons to popup functionality tooltip.
 5. Status other than 200 and Method other than GET will highlighted as bold, easier to spot on.
 6. Click "Diff" button to manually diff the text you want, or direct edit the fields on popup window then click "Diff" button to diff.
 7. Hover [Diff/Same/New/Curr/Prev] on URL entries will popup network request id, unique on this web browser session. Since you may filter data URI, so some id numbers may skip.
+8. Click "Question marks" icon after expanded URL will popup sorted queries strings side by side comparison.
 
 ## Listed in Mozilla Add-on store ##
 Address: https://addons.mozilla.org/en-US/firefox/addon/diff-http/

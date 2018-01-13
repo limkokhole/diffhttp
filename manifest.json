@@ -2,11 +2,11 @@
   "description": "Diff the network traffic in real-time to gain quick understanding of the structure of a website.",
   "manifest_version": 2,
   "name": "diff-http",
-  "version": "2.6",
+  "version": "2.7",
   "author": "Lim Kok Hole",
   "homepage_url": "https://github.com/limkokhole/diffhttp",
   "icons": {
-    "48": "icons/star.png"
+    "48": "icons/cherry_blossom_96x96.png"
   },
 
   "background": {

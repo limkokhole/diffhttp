@@ -17,7 +17,7 @@ Create a panel, and add listeners for panel show/hide events.
 /*
 browser.devtools.panels.create(
   "Diff HTTP",
-  "icons/star.png",
+  "icons/cherry_blossom_96x96.png",
   "devtools/panel/panel.html"
 ).then((newPanel) => {
   newPanel.onShown.addListener(handleShown);
@@ -51,7 +51,7 @@ function binarySearch(a, low, high, key) {
 
 //absolute path without '/' work here, but for consistent with js which must prefix with '/', so add '/' here
 //rf: https://stackoverflow.com/questions/11661613/chrome-devpanel-extension-communicating-with-background-page
-browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/panel.html", (extensionPanel) => {
+browser.devtools.panels.create("Diff HTTP", "/icons/cherry_blossom_96x96.png", "/devtools/panel/panel.html", (extensionPanel) => {
 
 	let tabId = 'diffHTTP_' + browser.devtools.inspectedWindow.tabId;
 
@@ -115,15 +115,6 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 				let prevReqId = null;
 				if (msg.tag === "add") {
 
-					let qi = items.url.indexOf('?');
-					let qArr = [];
-					//let prefixURL = null;
-					if (qi >= 0) {
-						let qParams = items.url.substring(qi + 1);
-						if (qParams) qArr = qParams.split("&");
-						//prefixURL = items.url.substring(0, qi + 1); //prefixURL will keep '?'
-					} //else prefixURL = items.url;
-
 					let compareIt;
 					let rec_len = itemRequestRecordURLs.length;
 					let insertIndex = binarySearch(itemRequestRecordURLs, 0, rec_len, items.url);
@@ -170,15 +161,15 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 							// console.log("choosenIndex: " + choosenIndex);
 							compareIt = itemRequestRecordURLs[choosenIndex];
 							prevURL = compareIt[0];
-							prevPostData = compareIt[2];
-							prevReqId = compareIt[3];
+							prevPostData = compareIt[1];
+							prevReqId = compareIt[2];
 						}
 
 					} else if (rec_len == 1) {
 						compareIt = itemRequestRecordURLs[0];
 						prevURL = compareIt[0];
-						prevPostData = compareIt[2];
-						prevReqId = compareIt[3];
+						prevPostData = compareIt[1];
+						prevReqId = compareIt[2];
 					}
 
 					if (prevURL != null) {
@@ -218,8 +209,8 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 							if (alternateIndex != null) {
 								compareIt = itemRequestRecordURLs[alternateIndex];
 								prevURL = compareIt[0];
-								prevPostData = compareIt[2];
-								prevReqId = compareIt[3];
+								prevPostData = compareIt[1];
+								prevReqId = compareIt[2];
 
 								slash_l = prevURL.split('?')[0].split('#')[0].split("/");
 								if (!sliceFullPath) {
@@ -249,11 +240,17 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 					let postedString = null;
 					if (items.requestBody != null) {
 						if (typeof items.requestBody.formData === 'undefined') { //json
-							//console.log(requestDetails.requestBody.raw);
+							//console.log(items.requestBody.raw);
 							if (items.requestBody.raw !== 'undefined') {
-								postedString = decodeURIComponent(String.fromCharCode.apply(null,
-									new Uint8Array(items.requestBody.raw[0].bytes)));
-								//console.log("postedString: " + postedString);
+								//console.log("items.requestBody.raw");
+								try {
+									postedString = decodeURIComponent(String.fromCharCode.apply(null,
+										new Uint8Array(items.requestBody.raw[0].bytes)));
+									//console.log("postedString: " + postedString);
+								} catch (e) {
+									//rf: https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+									postedString = "<Diff HTTP: Buffer>";
+								}
 
 								try {
 									var json = JSON.parse(postedString); //convert string to json object
@@ -264,7 +261,7 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 								}
 
 							} else { //[toproved:0] is it possible requestDetails.requestBody.raw undefined here ?
-								//console.log("first time see undefined raw, url: " + items.url);
+								console.log("first time see undefined raw, url: " + items.url);
 							}
 						} else { //multipart/form-data OR application/x-www-form-urlencoded
 							//don't print which concate which not able to expand object tree view in console
@@ -279,59 +276,77 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 						':' + (st.getMinutes() < 10 ? '0' + st.getMinutes() : st.getMinutes()) +
 						':' + (st.getSeconds() < 10 ? '0' + st.getSeconds() : st.getSeconds());
 
-					
+
 					//we must store "" if exist, not null which means not exist to be evalutate next time
 					//, but don't direct set postedString to "" here since we nid null in this round in js-pnael.js
 					let it;
 					if (postedString === null) {
-						it = [items.url, qArr, "", items.requestId]; //[todo:0] remake url with sorted qArr
+						it = [items.url, "", items.requestId];
 					} else {
-						it = [items.url, qArr, postedString, items.requestId]; //[todo:0] remake url with sorted qArr
+						it = [items.url, postedString, items.requestId];
 					}
 					itemRequestRecordURLs.splice(insertIndex, 0, it);
 
-/* 					let sameStr;
-					let prevExist = true;
-					if (prevPostData !== null) {
-						if (prevPostData === postedString) {
-							sameStr = true;
-						} else {
-							sameStr = false;
-						}
-					} else {
-						prevExist = false;
-					}
-					console.log(prevReqId + " :prevExist 1: " + prevExist);
-					itemReqIds[items.requestId] = [prevReqId, prevExist]; */
+					/* 					let sameStr;
+										let prevExist = true;
+										if (prevPostData !== null) {
+											if (prevPostData === postedString) {
+												sameStr = true;
+											} else {
+												sameStr = false;
+											}
+										} else {
+											prevExist = false;
+										}
+										console.log(prevReqId + " :prevExist 1: " + prevExist);
+										itemReqIds[items.requestId] = [prevReqId, prevExist]; */
 					itemReqIds[items.requestId] = prevReqId;
 
 					//console.log(items.requestId + " id:URL " + items.url);
 
-					//itemRequestRecordURLs.unshift([prefixURL, items.url, qArr, postedString]); //unshift() to add beginning instead of push()
-					//itemRequestRecordURLs.push( [prefixURL, items.url, qArr] );
+					//itemRequestRecordURLs.unshift([prefixURL, items.url, postedString]); //unshift() to add beginning instead of push()
+					//itemRequestRecordURLs.push( [prefixURL, items.url] );
 					_window.addURL(items.requestId, prevReqId, items.method, items.url, prevURL, postedString, prevPostData, currTime);
 				} else if (msg.tag === "update") {
 					_window.updateURL(items.requestId, items.statusCode);
 				} else if (msg.tag === "sentHeaders") {
-					items.requestHeaders.sort(function(a, b) { //rf: https://stackoverflow.com/a/979289/1074998
-                                            return a.name.localeCompare(b.name);
-                                        });
+					items.requestHeaders.sort(function (a, b) { //rf: https://stackoverflow.com/a/979289/1074998
+						return a.name.localeCompare(b.name);
+					});
 					let sentHeadersJson = JSON.stringify(items.requestHeaders, null, 3);
-					itemReqHeaders[items.requestId] = sentHeadersJson;
-					let prevHeadersJson = itemReqHeaders[itemReqIds[items.requestId]];
+					itemReqHeaders[items.requestId] = [sentHeadersJson, items.url];
+					let prevHeadersJson;
+					let prevHeadersJson_l = itemReqHeaders[itemReqIds[items.requestId]];
+					let currURL = items.url;
+					if (prevHeadersJson_l === undefined) {
+						prevURL = "";
+					} else {
+						prevHeadersJson = prevHeadersJson_l[0];
+						prevURL = prevHeadersJson_l[1];
+					}
 					//console.log("lol: " + items.requestId + " #currHeaders: " + items.requestHeader);
-					_window.sentHeaders(items.requestId, sentHeadersJson, prevHeadersJson);
+					_window.sentHeaders(items.requestId, sentHeadersJson, prevHeadersJson, prevURL, currURL);
 				} else if (msg.tag === "recvHeaders") {
-					items.responseHeaders.sort(function(a, b) {
-                                            return a.name.localeCompare(b.name);
-                                        });
+					items.responseHeaders.sort(function (a, b) {
+						return a.name.localeCompare(b.name);
+					});
 					let recvHeadersJson = JSON.stringify(items.responseHeaders, null, 3);
-					itemRecvHeaders[items.requestId] = recvHeadersJson;
+					itemRecvHeaders[items.requestId] = [recvHeadersJson, items.url];
 					let prevHeadersId = itemReqIds[items.requestId];
+					//console.log("prevHeadersId:" + prevHeadersId);
 					let prevRecvHeadersJson;
-					if (prevHeadersId !== null) {
-						prevRecvHeadersJson = itemRecvHeaders[prevHeadersId];
-						if (prevRecvHeadersJson  === undefined) {
+					let currURL = items.url;
+					if (prevHeadersId !== null && prevHeadersId !== undefined) {
+
+						prevRecvHeadersJson_l = itemRecvHeaders[prevHeadersId];
+						if (prevRecvHeadersJson_l === undefined) {
+							prevURL = "";
+						} else {
+							prevRecvHeadersJson = prevRecvHeadersJson_l[0];
+							prevURL = prevRecvHeadersJson_l[1];
+						}
+
+						if (prevRecvHeadersJson === undefined) {
 							let existingIds = waitHeadersIds[prevHeadersId];
 							if (existingIds === undefined) existingIds = [];
 							let giveUpPushDuplicated = false;
@@ -339,23 +354,28 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 								if (items.requestId === exId) giveUpPushDuplicated = true;
 							}
 							if (!giveUpPushDuplicated) existingIds.push(items.requestId);
+							/* 							console.log("existingIds:");
+														console.log(existingIds); */
 							waitHeadersIds[prevHeadersId] = existingIds;
 						}
 					} //else prevRecvHeadersJson keep undefined
 					//console.log("lol: " + items.requestId + " #currHeaders: " + items.responseHeaders);
 
-/* 					let reviveIdsDebug = waitHeadersIds[items.requestId];
-					if (reviveIdsDebug !== undefined) console.log(items.requestId + "revive PRE recvHeadersJson: " + recvHeadersJson);
- */
-					_window.recvHeaders(items.requestId, recvHeadersJson, prevRecvHeadersJson, prevHeadersId, false);
+					/* 					let reviveIdsDebug = waitHeadersIds[items.requestId];
+										if (reviveIdsDebug !== undefined) console.log(items.requestId + "revive PRE recvHeadersJson: " + recvHeadersJson);
+					 */
+					_window.recvHeaders(items.requestId, recvHeadersJson, prevRecvHeadersJson, prevHeadersId, false, prevURL, currURL);
 
 					let reviveIds = waitHeadersIds[items.requestId];
 					if (reviveIds !== undefined) {
+						let reviveRecvHeadersJson;
 						for (let reviveId of reviveIds) {
-							reviveRecvHeadersJson = itemRecvHeaders[reviveId];
-/* 							console.log("reviveId: " + reviveId);
-							console.log("reviveId recvHeadersJson: " + recvHeadersJson); */
-							_window.recvHeaders(reviveId, reviveRecvHeadersJson, recvHeadersJson, items.requestId, true);
+							reviveRecvHeadersJson_l = itemRecvHeaders[reviveId];
+							reviveRecvHeadersJson = reviveRecvHeadersJson_l[0];
+							currURL = reviveRecvHeadersJson_l[1];
+							/* 							console.log("reviveId: " + reviveId);
+														console.log("reviveId recvHeadersJson: " + recvHeadersJson); */
+							_window.recvHeaders(reviveId, reviveRecvHeadersJson, recvHeadersJson, items.requestId, true, items.url, currURL);
 						}
 						//don't remove since it can return second time with more data (.e.g "keep-alive" become  "Accept-Ranges")
 						//and hard-code remove only after 2nd time is overkill, ids shouldn't take much space
@@ -403,14 +423,16 @@ browser.devtools.panels.create("Diff HTTP", "/icons/star.png", "/devtools/panel/
 		});
 		_window.document.getElementById("button_diff_manual").addEventListener("click", () => {
 			let postDataHTML = {
+				prevURL: "",
+				currURL: "",
 				prevPostData: "<br>",
 				diffString: "<br>",
 				postedString: "<br>"
-			  };
-			  _window.respond({
+			};
+			_window.respond({
 				"tag": "showPostDataWindow",
 				"postdata": postDataHTML
-			  });
+			});
 		});
 
 

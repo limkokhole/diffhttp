@@ -152,10 +152,17 @@ div.button_clear input {
     vertical-align: middle;
 }
 
-input[type="submit"] {
+input[id="button_clear"] {
     border: none;
     width: 24px;
-    background: url(trash_314282_20.png) no-repeat;
+    background: url(/icons/trash_314282_20.png) no-repeat;
+    background-size: 20px;
+}
+
+input[id="button_queries"] {
+    border: none;
+    width: 24px;
+    background: url(/icons/queries.png) no-repeat;
     background-size: 20px;
 }
 
