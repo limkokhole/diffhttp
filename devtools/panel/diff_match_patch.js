@@ -344,7 +344,7 @@
                     break;
                 case -1:
                     b[g] = '<del style="background:#ff0004;">' + j + "</del>";
-                    //b[g] = '<del style="background:#ffaaff;">' + j + "</del>";
+                    //b[g] = '<del style="background:#ffb7c5;">' + j + "</del>";
                     break;
                 case 0:
                     b[g] = "<span>" + j + "</span>"

@@ -300,9 +300,17 @@ browser.devtools.panels.create("Diff HTTP", "/icons/cherry_blossom_96x96_panel.p
 										}
 										console.log(prevReqId + " :prevExist 1: " + prevExist);
 										itemReqIds[items.requestId] = [prevReqId, prevExist]; */
-					itemReqIds[items.requestId] = prevReqId;
+					//since  only "add" URL got shows req id, so you can safely md5 and store all theencoded id from now
+					if (prevReqId !== null) {
+						itemReqIds[items.requestId + '' + CryptoJS.MD5(items.url)] = prevReqId + '' + CryptoJS.MD5(prevURL);
+					} else {
+						//must set null instead of let it undefined otherwise [New] will get [Wait] recv Headers
+						itemReqIds[items.requestId + '' + CryptoJS.MD5(items.url)] = null;
+					}
 
-					//console.log(items.requestId + " id:URL " + items.url);
+					/* 
+										console.log(items.requestId + " id:URL " + items.url);
+										console.log(" prevReqId " + prevReqId); */
 
 					//itemRequestRecordURLs.unshift([prefixURL, items.url, postedString]); //unshift() to add beginning instead of push()
 					//itemRequestRecordURLs.push( [prefixURL, items.url] );
@@ -314,9 +322,10 @@ browser.devtools.panels.create("Diff HTTP", "/icons/cherry_blossom_96x96_panel.p
 						return a.name.localeCompare(b.name);
 					});
 					let sentHeadersJson = JSON.stringify(items.requestHeaders, null, 3);
-					itemReqHeaders[items.requestId] = [sentHeadersJson, items.url];
+
 					let prevHeadersJson;
-					let prevHeadersJson_l = itemReqHeaders[itemReqIds[items.requestId]];
+					let md5_curr_id = items.requestId + '' + CryptoJS.MD5(items.url);
+					let prevHeadersJson_l = itemReqHeaders[itemReqIds[md5_curr_id]];
 					let currURL = items.url;
 					if (prevHeadersJson_l === undefined) {
 						prevURL = "";
@@ -324,15 +333,19 @@ browser.devtools.panels.create("Diff HTTP", "/icons/cherry_blossom_96x96_panel.p
 						prevHeadersJson = prevHeadersJson_l[0];
 						prevURL = prevHeadersJson_l[1];
 					}
-					//console.log("lol: " + items.requestId + " #currHeaders: " + items.requestHeader);
+
+					//since 302 wil get same req_id,  so ensure set after get here (but still nid md5 to handle)
+					itemReqHeaders[md5_curr_id] = [sentHeadersJson, items.url];
+
 					_window.sentHeaders(items.requestId, sentHeadersJson, prevHeadersJson, prevURL, currURL);
 				} else if (msg.tag === "recvHeaders") {
 					items.responseHeaders.sort(function (a, b) {
 						return a.name.localeCompare(b.name);
 					});
 					let recvHeadersJson = JSON.stringify(items.responseHeaders, null, 3);
-					itemRecvHeaders[items.requestId] = [recvHeadersJson, items.url];
-					let prevHeadersId = itemReqIds[items.requestId];
+
+					let md5_curr_id = items.requestId + '' + CryptoJS.MD5(items.url);
+					let prevHeadersId = itemReqIds[md5_curr_id];
 					//console.log("prevHeadersId:" + prevHeadersId);
 					let prevRecvHeadersJson;
 					let currURL = items.url;
@@ -351,9 +364,9 @@ browser.devtools.panels.create("Diff HTTP", "/icons/cherry_blossom_96x96_panel.p
 							if (existingIds === undefined) existingIds = [];
 							let giveUpPushDuplicated = false;
 							for (let exId of existingIds) {
-								if (items.requestId === exId) giveUpPushDuplicated = true;
+								if ((items.requestId + '' + CryptoJS.MD5(items.url)) === exId) giveUpPushDuplicated = true;
 							}
-							if (!giveUpPushDuplicated) existingIds.push(items.requestId);
+							if (!giveUpPushDuplicated) existingIds.push(items.requestId + '' + CryptoJS.MD5(items.url));
 							/* 							console.log("existingIds:");
 														console.log(existingIds); */
 							waitHeadersIds[prevHeadersId] = existingIds;
@@ -361,12 +374,15 @@ browser.devtools.panels.create("Diff HTTP", "/icons/cherry_blossom_96x96_panel.p
 					} //else prevRecvHeadersJson keep undefined
 					//console.log("lol: " + items.requestId + " #currHeaders: " + items.responseHeaders);
 
+					//since 302 wil get same req_id,  so ensure set after get here
+					itemRecvHeaders[md5_curr_id] = [recvHeadersJson, items.url];
+
 					/* 					let reviveIdsDebug = waitHeadersIds[items.requestId];
 										if (reviveIdsDebug !== undefined) console.log(items.requestId + "revive PRE recvHeadersJson: " + recvHeadersJson);
 					 */
 					_window.recvHeaders(items.requestId, recvHeadersJson, prevRecvHeadersJson, prevHeadersId, false, prevURL, currURL);
 
-					let reviveIds = waitHeadersIds[items.requestId];
+					let reviveIds = waitHeadersIds[md5_curr_id];
 					if (reviveIds !== undefined) {
 						let reviveRecvHeadersJson;
 						for (let reviveId of reviveIds) {
@@ -375,7 +391,8 @@ browser.devtools.panels.create("Diff HTTP", "/icons/cherry_blossom_96x96_panel.p
 							currURL = reviveRecvHeadersJson_l[1];
 							/* 							console.log("reviveId: " + reviveId);
 														console.log("reviveId recvHeadersJson: " + recvHeadersJson); */
-							_window.recvHeaders(reviveId, reviveRecvHeadersJson, recvHeadersJson, items.requestId, true, items.url, currURL);
+							//slice(0,-32) to split id from id+md5 combination
+							_window.recvHeaders(reviveId.slice(0, -32), reviveRecvHeadersJson, recvHeadersJson, items.requestId, true, items.url, currURL);
 						}
 						//don't remove since it can return second time with more data (.e.g "keep-alive" become  "Accept-Ranges")
 						//and hard-code remove only after 2nd time is overkill, ids shouldn't take much space

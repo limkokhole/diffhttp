@@ -205,7 +205,7 @@ div.button_inner label {
     font:2.4em Futura, ‘Century Gothic’, AppleGothic, sans-serif;
     font-size:70%;
     padding:3px;
-    background-color:rgba(255,0,255,0.2);
+    background-color:rgba(255, 183, 197, 1);
     border:1px solid #6b066b;
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
@@ -217,7 +217,7 @@ div.button_inner label {
     cursor:pointer;
 }
 .button_diff_manual input[type="button"]:hover {
-    background-color:rgba(255,0,255,1);
+    background-color:rgba(255, 183, 197, 0.2);
 }
 /* END diff manually button */
 

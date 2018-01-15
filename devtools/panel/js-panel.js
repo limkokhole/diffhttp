@@ -65,6 +65,7 @@ function IsJsonString(str) {
   return true;
 }
 
+//[todo:0] support dark theme: https://hacks.mozilla.org/2017/12/using-the-new-theming-api-in-firefox/
 function addURL(rid, prevReqId, method, url, prevURL, postedString, prevPostData, currTime) {
 
   //let table = document.getElementById("urls");
@@ -149,7 +150,7 @@ function addURL(rid, prevReqId, method, url, prevURL, postedString, prevPostData
       }
     } else {
       diffString = hole.diff_prettyHtml(humanDiffs);
-      tdDiv.innerHTML = "<div style=\"background-color:#ffaaff;color:#000000;\"><b>[&nbsp;Diff&nbsp;]</b>&nbsp;" + currTime + "</div>" + diffString;
+      tdDiv.innerHTML = "<div style=\"background-color:#ffb7c5;color:#000000;\"><b>[&nbsp;Diff&nbsp;]</b>&nbsp;" + currTime + "</div>" + diffString;
     }
     cell4.appendChild(tdDiv);
     cell4.appendChild(document.createElement("br"));
@@ -232,9 +233,10 @@ function addURL(rid, prevReqId, method, url, prevURL, postedString, prevPostData
 
   //START cell URL
   //seems overflow (auto, scroll, none to expand) only works if column put last
-  //[todo:0] pls test data URI
+  //[todo:1] pls test data URI
   tdDiv = document.createElement("div");
   tdDiv.setAttribute("class", "dotcellURL");
+
   function diffQ(prevURL, url) {
     let prevQ;
     if (prevURL !== "") prevQ = makeQ(prevURL);
@@ -268,8 +270,8 @@ function addURL(rid, prevReqId, method, url, prevURL, postedString, prevPostData
       tdDiv.innerHTML = "<b title='" + rid + " (Prev: " + prevReqId + ")' style=\"background-color:#00ffff;color:#000000;\">[Same]</b> " +
         hole.diff_prettyHtml(humanDiffs);
     } else {
-      tdDiv.innerHTML = "<b title='" + rid + " (Prev: " + prevReqId + ")' style=\"background-color:#ffaaff;color:#000000;\">[&nbsp;Diff&nbsp;]</b>&nbsp; " +
-      hole.diff_prettyHtml(humanDiffs);
+      tdDiv.innerHTML = "<b title='" + rid + " (Prev: " + prevReqId + ")' style=\"background-color:#ffb7c5;color:#000000;\">[&nbsp;Diff&nbsp;]</b>&nbsp; " +
+        hole.diff_prettyHtml(humanDiffs);
     }
 
     cell3.appendChild(tdDiv);
@@ -390,7 +392,7 @@ function sentHeaders(rid, currHeaders, prevHeaders, prevURL, currURL) {
         tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Same]</b>" + hole.diff_prettyHtml(humanDiffs);
       } else {
         diffString = hole.diff_prettyHtml(humanDiffs);
-        tdDiv.innerHTML = "<b style=\"background-color:#ffaaff;color:#000000;\">[&nbsp;Diff&nbsp;]</b>" + diffString;
+        tdDiv.innerHTML = "<b style=\"background-color:#ffb7c5;color:#000000;\">[&nbsp;Diff&nbsp;]</b>" + diffString;
       }
       cell5.appendChild(tdDiv);
       cell5.appendChild(document.createElement("br"));
@@ -476,8 +478,8 @@ function recvHeaders(rid, currHeaders, prevHeaders, prevHeadersId, fromRevive, p
         else tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Waited:Same]</b>" + hole.diff_prettyHtml(humanDiffs);
       } else {
         diffString = hole.diff_prettyHtml(humanDiffs);
-        if (!fromRevive) tdDiv.innerHTML = "<b style=\"background-color:#ffaaff;color:#000000;\">[&nbsp;Diff&nbsp;]</b>" + diffString;
-        else tdDiv.innerHTML = "<b style=\"background-color:#ffaaff;color:#000000;\">[&nbsp;Waited:Diff&nbsp;]</b>" + diffString;
+        if (!fromRevive) tdDiv.innerHTML = "<b style=\"background-color:#ffb7c5;color:#000000;\">[&nbsp;Diff&nbsp;]</b>" + diffString;
+        else tdDiv.innerHTML = "<b style=\"background-color:#ffb7c5;color:#000000;\">[&nbsp;Waited:Diff&nbsp;]</b>" + diffString;
       }
       cell6.appendChild(tdDiv);
       cell6.appendChild(document.createElement("br"));
