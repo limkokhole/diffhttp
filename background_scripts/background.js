@@ -255,6 +255,14 @@ browser.runtime.onConnect.addListener((port) => {
             }, ["requestBody"]
         );
 
+        browser.webRequest.onBeforeRedirect.addListener(
+            updateURL,
+            //{tabId: realTabId, urls: ["<all_urls>"]}
+            {
+                urls: ["<all_urls>"]
+            }
+        );
+
         browser.webRequest.onResponseStarted.addListener(
             updateURL,
             //{tabId: realTabId, urls: ["<all_urls>"]}
