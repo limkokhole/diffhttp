@@ -30,7 +30,11 @@ Mark as [Wait] in "Recv Headers" if prev URL's "Recv Headers" still empty, it ma
 
 ## Logic behind the scene ##
 
-Everytime the URL captured insert to the table, the all entries list will be sort right away. Due to the list is always has been sorted, so it can simply pick 2 closest siblings. Then it will try to calculate the diff count for both siblings, and try to pick the CLOSEST MATCH sibling. If it did match "The Rules" below, then it will choosen to diff with the current entry. If the CLOSEST MATCH sibling doesn't match "The Rules", then it will try the 2nd CLOSEST MATCH to test the "The Rules". If both sibling failed to pass the test of "The Rules", then it will give up and mark current entry as [New].
+Everytime the URL captured insert to the table, the internal all entries list will be sort right away. Due to the list is always has been sorted:  
+[1] It only need to do binary sort when insert new single entry.  
+[2] It can quickly picks 2 siblings of current entry which consider as 2 CLOSEST MATCH.  
+
+Then it will try to calculate the diff count for both siblings, and try to pick the least count of diff which is the 1st CLOSEST MATCH. If it did match “The Rules” below, then it will choosen to diff with the current entry. If the 1st CLOSEST MATCH sibling doesn’t match “The Rules”, then it will try the 2nd CLOSEST MATCH to test the “The Rules”. If both sibling failed to pass the test of “The Rules”, then it will give up and mark current entry as [New].  
 
 ## The Rules ##
 
