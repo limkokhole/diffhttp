@@ -40,18 +40,16 @@ The url https://mozilla.org/video/foo/hi?q=1 will NOT compare with https://mozil
 
 The url https://mozilla.org/video/foo/hi?q=1 will NOT compare with https://mozilla.com/video/foo/hello?q=1 since both hosts are different, i.e. https://mozilla.org not equal to https://mozilla.com.
 
-The reasons how this rules has been choosen is because of the connections of query string/headers between 2 URLs is most likely depends on filename/last path, instead of the host and middle path. You can imaging that youtube.com/video/a.mp4 shouldn't diff with youtube.com/audio/b.m4a, instead youtube.com/video/a.mp4 should diff with youtube.com/video/b.mp4 if possible. And if compare google.com with facebook.com, it doesn't make mush sense. But I create a button called 'Diff only if host same' to allow you to tick for youtube.com/AAA/BBB/CCC and youtube.com/DDD/EEE/FFF to diff.
+The reasons how this rules has been choosen is because of the valuable comparison of query string/headers between 2 URLs most likely target on filename/last path with the same host and middle path. You can imaging that youtube.com/video/a.mp4 shouldn’t diff with youtube.com/audio/b.m4a, instead youtube.com/video/a.mp4 should diff with youtube.com/video/b.mp4 if possible. And if compare google.com with facebook.com, it doesn’t make much sense. But I create a button called ‘Diff only if host same’ (i.e. as long as both hosts are same) to allow you to tick for youtube.com/AAA/BBB/CCC and youtube.com/DDD/EEE/FFF to diff.  
 
 ## Some Features ##
 
-1. Click the [Diff] URL entry to reveals the current and previous entry URL.
+1. Click the [Diff] URL entry to reveals the current and previous entry URL. You can copy the URLs by click to select and Ctrl+C.
 2. Click the [Diff/Same/New/] URL entries to expands if not enough space of height.
-3. Click the Post data and headers entries to open new window to show the [prev][diff][current] side by side comparison. Non-json post data will splits by '&' and sorted.
+3. Click the Post data and headers entries to open new window to show the [prev][diff][current] side by side comparison.
 4. Hover the top bar buttons to popup functionality tooltip.
-5. Status other than 200 and Method other than GET will highlighted as bold, easier to spot on.
+5. Status other than 200 and Method other than GET will highlight as bold for easier to spot on.
 6. Click "Diff" button to manually diff the text you want, or direct edit the fields on popup window then click "Diff" button to diff.
-7. Hover [Diff/Same/New/Curr/Prev] on URL entries will popup network request id, unique on this web browser session. Since you may filter data URI, so some id numbers may skip.
-8. Click "Question marks" icon after expanded URL will popup sorted queries strings side by side comparison.
 
 ## Listed in Mozilla Add-on store ##
 Address: https://addons.mozilla.org/en-US/firefox/addon/diff-http/
