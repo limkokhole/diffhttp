@@ -1,6 +1,6 @@
 # Diff HTTP
 
-**Diff the network traffic in real-time to observe the urls variant over the time.**
+**Diff the network traffic in real-time to observe the urls variant over time.**
 
 ## Brief ##
 
