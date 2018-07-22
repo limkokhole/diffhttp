@@ -53,7 +53,7 @@ function binarySearch(a, low, high, key) {
 //rf: https://stackoverflow.com/questions/11661613/chrome-devpanel-extension-communicating-with-background-page
 browser.devtools.panels.create("Diff HTTP", "/icons/cherry_blossom_96x96_panel.png", "/devtools/panel/panel.html", (extensionPanel) => {
 
-	let tabId = 'diffHTTP_' + browser.devtools.inspectedWindow.tabId;
+	let tabId = 'diffHTTP_' + browser.devtools.inspectedWindow.tabId; //+ (new Date());
 
 	//console.log("panel create 0: " + tabId);
 	var _window; // Going to hold the reference to panel.html's `window`

@@ -103,7 +103,7 @@ function addURL(requestDetails) {
 
 //currently no such 304 Not Modified which happen in builtin network tab
 function updateURL(responseDetails) {
-    //console.log("updating: " + responseDetails.url + " #tabId:" + "diffHTTP_" + responseDetails.tabId + " #this.tabId: " + tabId);
+    //console.log("updating: " + responseDetails.url + " #tabId:" + "diffHTTP_" + responseDetails.tabId);
     //if ("diffHTTP_" + responseDetails.tabId === tabId) {
     //    console.log("response is same tabId");
     notifyDevtools({
@@ -115,6 +115,7 @@ function updateURL(responseDetails) {
 }
 
 function logSentHeaders(e) {
+    //console.log("sent: " +" #e.tabId: " + e.tabId);
     notifyDevtools({
         "tabId": "diffHTTP_" + e.tabId,
         "tag": "sentHeaders",
@@ -123,6 +124,7 @@ function logSentHeaders(e) {
 }
 
 function logReceivedHeaders(e) {
+    //console.log("recv: " +" #e.tabId: " + e.tabId);
     notifyDevtools({
         "tabId": "diffHTTP_" + e.tabId,
         "tag": "recvHeaders",
@@ -206,23 +208,39 @@ function popUpWindow(msg) {
 }
 
 var ports = [];
+
+function removeItem(array, item) {
+    var i = array.length;
+    //console.log("removing item ....");
+    while (i--) {
+        if (array[i] === item) {
+            //console.log("removed item");
+            array.splice(array.indexOf(item), 1);
+        }
+    }
+    //console.log("remove item done");
+}
+
 browser.runtime.onConnect.addListener((port) => {
     //console.log("port 111111: " + port.name);
 
     if (!port.name || !port.name.startsWith("diffHTTP_")) return;
 
+    /* 
     let shouldAddWebListener = true;
     ports.forEach((portI) => {
-        //console.log("#1 portI: " + portI.name + " VS port.name: " + port.name);
+        console.log("#1 portI: " + portI.name + " VS port.name: " + port.name);
         if (portI.name === port.name) {
-            shouldAddWebListener = false;
-            //console.log("got same port already, disconnect old one");
-            portI.disconnect();
+            //shouldAddWebListener = false;
+            console.log("got same port already, disconnect old one");
+            //no nid anymore which causes diconnect valid new port and error //portI.disconnect();
             //portI.disconnect();
             //portI.disconnect(); //proved that even disconnect disconnected port will no error to continue next code, to prevent onDisconnected clean up process not reset ports and cause ports loop may try to disconnect DISCONNECTED port.
         }
     });
-    ports = ports.filter(portI => portI.name !== port.name); //remove all ports item which same name with new port(happen if panel window closed and reopen in same tab), only after this will push new port to ports
+    */
+
+    //ports = ports.filter(portI => portI.name !== port.name); //remove all ports item which same name with new port(happen if panel window closed and reopen in same tab), only after this will push new port to ports
     /* 
     ports.forEach(function(portI) {
          console.log("#2 portI: " + portI.name + " VS port.name: " + port.name);
@@ -235,11 +253,11 @@ browser.runtime.onConnect.addListener((port) => {
     //can't use var, which will get override in multiple tabs
     //let tabId = port.name;
 
-    //console.log("port 333333 tab id: " + tabId );
+    //console.log("port 333333 tab id: ");
 
     //this browser.webRequest *is not* depends on port, so port disconnected doesn't means browser.webRequest listener has been remove,
     //, and so you shouldn't add listener here with duplicated tabId (And onResponseStarted will failed to get statusCode in duplicated listener)
-    if (shouldAddWebListener) {
+    //if (shouldAddWebListener) {
         //console.log("add method now");
 
         //should add listener after onConnect, not put otuside which before still no tabId yet
@@ -282,7 +300,7 @@ browser.runtime.onConnect.addListener((port) => {
                 urls: ["<all_urls>"]
             }, ["responseHeaders"]
         );
-    } //else console.log("dont method");
+    //} //else console.log("dont method");
 
     //since panel onHidden not trigger if close, so point do any clean up, and this also allow tab continue update even though navigate to other tab.
     // Remove port when destroyed (eg when devtools instance is closed)
@@ -298,6 +316,7 @@ browser.runtime.onConnect.addListener((port) => {
         if (p.error) {
             console.log(`diffhttp: Disconnected due to an error: ${p.error.message}`);
         } else console.log("diffhttp: disconnected success");
+        removeItem(ports, port);
     });
 
     port.onMessage.addListener((msg) => {
@@ -315,6 +334,7 @@ browser.runtime.onConnect.addListener((port) => {
     });
 
     ports.push(port);
+    //console.log("port 4444444 port: " + ports);
 
 });
 // Function to send a message to all devtools.html views:
@@ -325,7 +345,6 @@ function notifyDevtools(msg) {
         port.postMessage(msg); //push to disconnected port will trigger warning, but since we use filter to remove, when onConnect() above, so no more such warning.
     });
     //console.log("hole end loop port -1");
-
 }
 
 
