@@ -26,7 +26,6 @@ Mark as [Wait] in "Recv Headers" if prev URL's "Recv Headers" still empty, it ma
 
 5. Change panel black theme to white by navigate: about:config -> devtools.theme -> double-click the "dark" Value and edit it to "white".
 
-6.  You should open a new tab to continue your task after done with this extension since currently no way to remove listeners once run on current tab even though inspector window has been closed.
 
 ## Logic behind the scene ##
 
