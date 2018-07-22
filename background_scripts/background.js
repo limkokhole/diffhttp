@@ -316,7 +316,7 @@ browser.runtime.onConnect.addListener((port) => {
         if (p.error) {
             console.log(`diffhttp: Disconnected due to an error: ${p.error.message}`);
         } else console.log("diffhttp: disconnected success");
-        removeItem(ports, port);
+        removeItem(ports, port); //fixed "Attempt to postMessage on disconnected port"
     });
 
     port.onMessage.addListener((msg) => {
