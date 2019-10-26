@@ -2,6 +2,38 @@
 //console.log("running popup script 0");
 let tabUrl = null;
 
+/** modify 3 parts from https://github.com/google/diff-match-patch/blob/62f2e689f498f9c92dbc588c58750addec9b1654/javascript/diff_match_patch_uncompressed.js 
+ * Convert a diff array into a pretty HTML report.
+ * @param {!Array.<!diff_match_patch.Diff>} diffs Array of diff tuples.
+ * @return {string} HTML representation.
+ */
+diff_prettyHtml = function(diffs) {
+  var html = [];
+  var pattern_amp = /&/g;
+  var pattern_lt = /</g;
+  var pattern_gt = />/g;
+  var pattern_para = /\n/g;
+  for (var x = 0; x < diffs.length; x++) {
+    var op = diffs[x][0];    // Operation (insert, delete, equal)
+    var data = diffs[x][1];  // Text of change.
+    var text = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;')
+        .replace(pattern_gt, '&gt;').replace(pattern_para, '<br>'); //1st part changed: removed &para; to remove weird delimiter symbol "¶" on popup windows <pre/> when diff
+        //.replace(pattern_gt, '&gt;').replace(pattern_para, '&para;<br>');
+    switch (op) {
+      case DIFF_INSERT:
+        html[x] = '<ins style="background:#0cff00;">' + text + '</ins>'; //2nd part changed: html color code
+        break;
+      case DIFF_DELETE:
+        html[x] = '<del style="background:#ff0004;">' + text + '</del>'; //3rd part changed: html color code
+        break;
+      case DIFF_EQUAL:
+        html[x] = '<span>' + text + '</span>';
+        break;
+    }
+  }
+  return html.join('');
+};
+
 browser.runtime.onMessage.addListener(async (msg, sender) => {
     /*     console.log(msg);
         console.log(sender); */
@@ -36,7 +68,7 @@ browser.runtime.onMessage.addListener(async (msg, sender) => {
                 //, ref: https://stackoverflow.com/a/9330754/1074998
                 let humanDiffs = hole.diff_main(prevPostData_row.innerText, postedString_row.innerText);
                 hole.diff_cleanupSemantic(humanDiffs);
-                let diffString = hole.diff_prettyHtml(humanDiffs);
+                let diffString = diff_prettyHtml(humanDiffs);
                 diffString_row.innerHTML = "<pre style=\"overflow-x:scroll\">" + diffString + "</pre>";
             });
 

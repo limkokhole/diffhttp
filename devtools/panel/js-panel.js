@@ -15,6 +15,38 @@ function escapeHTML(unsafe_str) {
     .replace(/\//g, '&#x2F;');
 }
 
+/** modify 3 parts from https://github.com/google/diff-match-patch/blob/62f2e689f498f9c92dbc588c58750addec9b1654/javascript/diff_match_patch_uncompressed.js 
+ * Convert a diff array into a pretty HTML report.
+ * @param {!Array.<!diff_match_patch.Diff>} diffs Array of diff tuples.
+ * @return {string} HTML representation.
+ */
+diff_prettyHtml = function(diffs) {
+  var html = [];
+  var pattern_amp = /&/g;
+  var pattern_lt = /</g;
+  var pattern_gt = />/g;
+  var pattern_para = /\n/g;
+  for (var x = 0; x < diffs.length; x++) {
+    var op = diffs[x][0];    // Operation (insert, delete, equal)
+    var data = diffs[x][1];  // Text of change.
+    var text = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;')
+        .replace(pattern_gt, '&gt;').replace(pattern_para, '<br>'); //1st part changed: removed &para; to remove weird delimiter symbol "¶" on popup windows <pre/> when diff
+        //.replace(pattern_gt, '&gt;').replace(pattern_para, '&para;<br>'); //original
+    switch (op) {
+      case DIFF_INSERT:
+        html[x] = '<ins style="background:#0cff00;">' + text + '</ins>'; //2nd part changed: html color code
+        break;
+      case DIFF_DELETE:
+        html[x] = '<del style="background:#ff0004;">' + text + '</del>'; //3rd part changed: html color code
+        break;
+      case DIFF_EQUAL:
+        html[x] = '<span>' + text + '</span>';
+        break;
+    }
+  }
+  return html.join('');
+};
+
 function makeQ(url) {
   let q_sharp_i = url.indexOf('#');
   let q_question_i = url.indexOf('?');
@@ -141,15 +173,15 @@ function addURL(rid, prevReqId, method, url, prevURL, postedString, prevPostData
     if (prevPostData === postedString) {
       if (prevPostData === "") {
         nidPopUp = false;
-        tdDiv.innerHTML = "<div style=\"border-bottom: 8px solid black; background-color:#00ffff;color:#000000;\"><b>[Same]</b>&nbsp;" + currTime + "</div>" + hole.diff_prettyHtml(humanDiffs);
+        tdDiv.innerHTML = "<div style=\"border-bottom: 8px solid black; background-color:#00ffff;color:#000000;\"><b>[Same]</b>&nbsp;" + currTime + "</div>" + diff_prettyHtml(humanDiffs);
       } else {
         /*         console.log("prevPostData");
                 console.log(prevPostData);
                 console.log(humanDiffs); */
-        tdDiv.innerHTML = "<div style=\"background-color:#00ffff;color:#000000;\"><b>[Same]</b>&nbsp;" + currTime + "</div>" + hole.diff_prettyHtml(humanDiffs);
+        tdDiv.innerHTML = "<div style=\"background-color:#00ffff;color:#000000;\"><b>[Same]</b>&nbsp;" + currTime + "</div>" + diff_prettyHtml(humanDiffs);
       }
     } else {
-      diffString = hole.diff_prettyHtml(humanDiffs);
+      diffString = diff_prettyHtml(humanDiffs);
       tdDiv.innerHTML = "<div style=\"background-color:#ffb7c5;color:#000000;\"><b>[&nbsp;Diff&nbsp;]</b>&nbsp;" + currTime + "</div>" + diffString;
     }
     cell4.appendChild(tdDiv);
@@ -186,14 +218,14 @@ function addURL(rid, prevReqId, method, url, prevURL, postedString, prevPostData
       tdDivPre.style.color = "White";
       tdDivPre.style.backgroundColor = "Blue";
       tdDivContainerNoPrev.appendChild(tdDivPre);
-      /*          let str = hole.diff_prettyHtml(hole.diff_main(postedString, postedString));
+      /*          let str = diff_prettyHtml(hole.diff_main(postedString, postedString));
               str = str.replace(/&para;/g, ''); 
               tdDiv.innerHTML = "<br>" + str + "</pre>"; */ //after convert from diff, the indent will lose
       tdDiv.innerHTML = "<pre>" + postedString + "</pre>";
-      //console.log(hole.diff_prettyHtml(hole.diff_main(postedString, postedString)));
+      //console.log(diff_prettyHtml(hole.diff_main(postedString, postedString)));
       tdDivContainerNoPrev.addEventListener("click", () => {
         let humanDiffs = hole.diff_main("", postedString);
-        let diffString = hole.diff_prettyHtml(humanDiffs);
+        let diffString = diff_prettyHtml(humanDiffs);
         let postDataHTML = {
           prevURL: prevURL,
           currURL: url,
@@ -246,7 +278,7 @@ function addURL(rid, prevReqId, method, url, prevURL, postedString, prevPostData
     else currQ = "";
     let humanDiffs = hole.diff_main(prevQ, currQ);
     hole.diff_cleanupSemantic(humanDiffs);
-    let diffString = hole.diff_prettyHtml(humanDiffs);
+    let diffString = diff_prettyHtml(humanDiffs);
     let postDataHTML = {
       prevURL: prevURL,
       currURL: url,
@@ -268,10 +300,10 @@ function addURL(rid, prevReqId, method, url, prevURL, postedString, prevPostData
     if (prevURL === url) { //== must compare here instead of devtools.js early otherwise will always [New] if duplicated
       sameUrl = true;
       tdDiv.innerHTML = "<b title='" + rid + " (Prev: " + prevReqId + ")' style=\"background-color:#00ffff;color:#000000;\">[Same]</b> " +
-        hole.diff_prettyHtml(humanDiffs);
+        diff_prettyHtml(humanDiffs);
     } else {
       tdDiv.innerHTML = "<b title='" + rid + " (Prev: " + prevReqId + ")' style=\"background-color:#ffb7c5;color:#000000;\">[&nbsp;Diff&nbsp;]</b>&nbsp; " +
-        hole.diff_prettyHtml(humanDiffs);
+        diff_prettyHtml(humanDiffs);
     }
 
     cell3.appendChild(tdDiv);
@@ -389,9 +421,9 @@ function sentHeaders(rid, currHeaders, prevHeaders, prevURL, currURL) {
       currHeaders = escapeHTML(currHeaders);
       hole.diff_cleanupSemantic(humanDiffs);
       if (prevHeaders === currHeaders) {
-        tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Same]</b>" + hole.diff_prettyHtml(humanDiffs);
+        tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Same]</b>" + diff_prettyHtml(humanDiffs);
       } else {
-        diffString = hole.diff_prettyHtml(humanDiffs);
+        diffString = diff_prettyHtml(humanDiffs);
         tdDiv.innerHTML = "<b style=\"background-color:#ffb7c5;color:#000000;\">[&nbsp;Diff&nbsp;]</b>" + diffString;
       }
       cell5.appendChild(tdDiv);
@@ -414,7 +446,7 @@ function sentHeaders(rid, currHeaders, prevHeaders, prevURL, currURL) {
       tdDivPre.setAttribute("class", "dotcellPOST_UA");
       if (currHeaders !== null) {
         //no point do humanDiffs here bcoz comapre with empty string
-        let diffString = hole.diff_prettyHtml(hole.diff_main("", currHeaders));
+        let diffString = diff_prettyHtml(hole.diff_main("", currHeaders));
         currHeaders = escapeHTML(currHeaders);
         tdDiv.innerHTML = "<b style=\"background-color:#0000ff;color:#ffffff;\">[New]</b>" + currHeaders;
         tdDiv.addEventListener("click", () => {
@@ -472,12 +504,12 @@ function recvHeaders(rid, currHeaders, prevHeaders, prevHeadersId, fromRevive, p
       currHeaders = escapeHTML(currHeaders);
       hole.diff_cleanupSemantic(humanDiffs);
       if (waitPrevHeaders) {
-        tdDiv.innerHTML = "<b style=\"background-color:#aa00ff;color:#ffffff;\">[Wait]</b>" + hole.diff_prettyHtml(humanDiffs);
+        tdDiv.innerHTML = "<b style=\"background-color:#aa00ff;color:#ffffff;\">[Wait]</b>" + diff_prettyHtml(humanDiffs);
       } else if (prevHeaders === currHeaders) {
-        if (!fromRevive) tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Same]</b>" + hole.diff_prettyHtml(humanDiffs);
-        else tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Waited:Same]</b>" + hole.diff_prettyHtml(humanDiffs);
+        if (!fromRevive) tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Same]</b>" + diff_prettyHtml(humanDiffs);
+        else tdDiv.innerHTML = "<b style=\"background-color:#00ffff;color:#000000;\">[Waited:Same]</b>" + diff_prettyHtml(humanDiffs);
       } else {
-        diffString = hole.diff_prettyHtml(humanDiffs);
+        diffString = diff_prettyHtml(humanDiffs);
         if (!fromRevive) tdDiv.innerHTML = "<b style=\"background-color:#ffb7c5;color:#000000;\">[&nbsp;Diff&nbsp;]</b>" + diffString;
         else tdDiv.innerHTML = "<b style=\"background-color:#ffb7c5;color:#000000;\">[&nbsp;Waited:Diff&nbsp;]</b>" + diffString;
       }
@@ -501,7 +533,7 @@ function recvHeaders(rid, currHeaders, prevHeaders, prevHeadersId, fromRevive, p
       tdDivPre.setAttribute("class", "dotcellPOST_UA");
       if (currHeaders !== null) {
         //no point do humanDiffs here bcoz comapre with empty string
-        let diffString = hole.diff_prettyHtml(hole.diff_main("", currHeaders));
+        let diffString = diff_prettyHtml(hole.diff_main("", currHeaders));
         currHeaders = escapeHTML(currHeaders);
         tdDiv.innerHTML = "<b style=\"background-color:#0000ff;color:#ffffff;\">[New]</b>" + currHeaders;
         tdDiv.addEventListener("click", () => {
